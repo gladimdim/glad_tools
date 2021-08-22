@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:glad_tools/models/base64.dart';
+import 'package:glad_tools/models/base64_image/base64_image.dart';
 import 'package:glad_tools/models/base_class.dart';
-import 'package:glad_tools/models/json_beautify.dart';
+import 'package:glad_tools/models/json_beautify/json_beautify.dart';
 
 class MainView extends StatefulWidget {
   const MainView({Key? key}) : super(key: key);
@@ -22,6 +22,7 @@ class _MainViewState extends State<MainView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          title: Text(selected.title),
           actions: actions
               .map(
                 (e) => IconButton(

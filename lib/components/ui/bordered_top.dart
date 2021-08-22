@@ -13,7 +13,7 @@ class BorderedTop extends StatelessWidget {
   Widget build(BuildContext context) {
     return BorderedContainerWithSides(
       child: child,
-      borderDirections: [AxisDirection.up],
+      borderDirections: const [AxisDirection.up],
     );
   }
 }

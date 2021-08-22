@@ -27,31 +27,59 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text("Base64 Image Encode:"),
-        BorderedAll(
-          child: TextField(
-            decoration: InputDecoration(hintText: "Paste base64 image string"),
-            minLines: 5,
-            maxLines: 15,
-            controller: _controller,
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Row(
+            children: [
+              TextButton(
+                onPressed: _format,
+                child: const Text("Decode"),
+              ),
+              TextButton(
+                onPressed: _clear,
+                child: const Text("Clear"),
+              ),
+            ],
           ),
-        ),
-        if (_image != null) _image!,
-        Row(
-          children: [
-            TextButton(
-              onPressed: _format,
-              child: Text("Format"),
-            ),
-            TextButton(
-              onPressed: _clear,
-              child: Text("Clear"),
-            ),
-          ],
-        ),
-      ],
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 1,
+                child: BorderedAll(
+                  child: TextField(
+                    decoration:
+                        InputDecoration(hintText: "Paste base64 image string"),
+                    minLines: 5,
+                    maxLines: 15,
+                    controller: _controller,
+                  ),
+                ),
+              ),
+              if (_image != null)
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text("Decode result:"),
+                      ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: 500,
+                            minWidth: 500,
+                          ),
+                          child: _image),
+                    ],
+                  ),
+                ),
+              if (_image == null)
+                Text(
+                    "No image to show. Paste text to decode the base64 string into image"),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -68,8 +96,15 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
 
   void _format() {
     var sImage = _controller.text;
+    final containsMeta = sImage.contains("data:image");
+    if (containsMeta) {
+      sImage = sImage.split(",")[1];
+    }
     Uint8List bytes = base64Decode(sImage);
-    _image = Image.memory(bytes);
+    _image = Image.memory(
+      bytes,
+      fit: BoxFit.fitWidth,
+    );
     setState(() {});
   }
 }

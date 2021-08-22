@@ -41,8 +41,8 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
                 onPressed: _clear,
                 child: const Text("Clear"),
               ),
-              IconButton(onPressed: _copy, icon: Icon(Icons.copy)),
-              IconButton(onPressed: _paste, icon: Icon(Icons.paste)),
+              IconButton(onPressed: _copy, icon: const Icon(Icons.copy)),
+              IconButton(onPressed: _paste, icon: const Icon(Icons.paste)),
             ],
           ),
           Row(
@@ -53,8 +53,8 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
                 child: BorderedAll(
                   child: TextField(
                     onChanged: (_) => _textChanged(),
-                    decoration:
-                        InputDecoration(hintText: "Paste base64 image string"),
+                    decoration: const InputDecoration(
+                        hintText: "Paste base64 image string"),
                     minLines: 5,
                     maxLines: 15,
                     controller: _controller,
@@ -67,9 +67,9 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text("Decode result:"),
+                      const Text("Decode result:"),
                       ConstrainedBox(
-                          constraints: BoxConstraints(
+                          constraints: const BoxConstraints(
                             maxWidth: 500,
                             minWidth: 500,
                           ),
@@ -78,10 +78,10 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
                   ),
                 ),
               if (_image == null)
-                Expanded(
+                const Expanded(
                   flex: 1,
                   child: Center(
-                    child: const Text(
+                    child: Text(
                         "No image to show. Paste text to decode the base64 string into image"),
                   ),
                 ),
@@ -96,7 +96,7 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
     _controller.value = TextEditingValue(
       text: "",
       selection: TextSelection.fromPosition(
-        TextPosition(offset: 0),
+        const TextPosition(offset: 0),
       ),
     );
     _image = null;

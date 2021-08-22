@@ -49,6 +49,7 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
                 flex: 1,
                 child: BorderedAll(
                   child: TextField(
+                    onChanged: (_) => _textChanged(),
                     decoration:
                         InputDecoration(hintText: "Paste base64 image string"),
                     minLines: 5,
@@ -106,5 +107,11 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
       fit: BoxFit.fitWidth,
     );
     setState(() {});
+  }
+
+  void _textChanged() {
+    setState(() {
+      _image = null;
+    });
   }
 }

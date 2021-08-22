@@ -8,8 +8,10 @@ import 'package:glad_tools/models/base_class.dart';
 class Base64Image extends ToolObject {
   Base64Image()
       : super(
-            icon: const Icon(Icons.image),
-            contentBuilder: (context) => const Base64ImageContent());
+          title: "Base64 Image Decoder",
+          icon: const Icon(Icons.image),
+          contentBuilder: (context) => const Base64ImageContent(),
+        );
 }
 
 class Base64ImageContent extends StatefulWidget {
@@ -27,7 +29,7 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text("Base64 Encode:"),
+        Text("Base64 Image Encode:"),
         BorderedAll(
           child: TextField(
             decoration: InputDecoration(hintText: "Paste base64 image string"),

@@ -25,8 +25,13 @@ class _MainViewState extends State<MainView> {
           title: Text(selected.title),
           actions: actions
               .map(
-                (e) => IconButton(
-                  icon: e.icon,
+                (e) => ElevatedButton(
+                  child: Row(
+                    children: [
+                      e.icon,
+                      Text(e.title),
+                    ],
+                  ),
                   onPressed: () => _selected(e),
                 ),
               )

@@ -15,7 +15,7 @@ class BorderedAll extends StatelessWidget {
       child: child,
       width: width,
       color: color,
-      borderDirections: [
+      borderDirections: const [
         AxisDirection.down,
         AxisDirection.up,
         AxisDirection.left,

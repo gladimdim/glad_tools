@@ -25,6 +25,7 @@ class Base64ImageContent extends StatefulWidget {
 class _Base64ImageContentState extends State<Base64ImageContent> {
   final TextEditingController _controller = TextEditingController();
   Image? _image;
+  String? errorString;
 
   @override
   Widget build(BuildContext context) {
@@ -46,43 +47,62 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
             ],
           ),
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
                 flex: 1,
-                child: BorderedAll(
-                  child: TextField(
-                    onChanged: (_) => _textChanged(),
-                    decoration: const InputDecoration(
-                        hintText: "Paste base64 image string"),
-                    minLines: 5,
-                    maxLines: 15,
-                    controller: _controller,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: BorderedAll(
+                    child: TextField(
+                      onChanged: (_) => _textChanged(),
+                      decoration: const InputDecoration(
+                          hintText: "Paste base64 image string"),
+                      minLines: 5,
+                      maxLines: 15,
+                      controller: _controller,
+                    ),
                   ),
                 ),
               ),
               if (_image != null)
                 Expanded(
                   flex: 1,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      const Text("Decode result:"),
-                      ConstrainedBox(
-                          constraints: const BoxConstraints(
-                            maxWidth: 500,
-                            minWidth: 500,
-                          ),
-                          child: _image),
-                    ],
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Text("Decode result:"),
+                        ConstrainedBox(
+                            constraints: const BoxConstraints(
+                              maxWidth: 500,
+                              minWidth: 500,
+                            ),
+                            child: _image),
+                      ],
+                    ),
                   ),
                 ),
-              if (_image == null)
-                const Expanded(
+              if (_image == null && errorString == null)
+                Expanded(
                   flex: 1,
                   child: Center(
-                    child: Text(
-                        "No image to show. Paste text to decode the base64 string into image"),
+                    child: Center(
+                      child: Text(
+                          "No image to show. Paste text to decode the base64 string into image"),
+                    ),
+                  ),
+                ),
+              if (errorString != null)
+                Expanded(
+                  flex: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: Text(
+                          "An error has occurred while converting to image: $errorString"),
+                    ),
                   ),
                 ),
             ],
@@ -100,6 +120,7 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
       ),
     );
     _image = null;
+    errorString = null;
     setState(() {});
   }
 
@@ -108,6 +129,7 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
     if (data != null && data.text != null) {
       _controller.text = data.text!;
     }
+    _format();
   }
 
   void _copy() {
@@ -115,16 +137,21 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
   }
 
   void _format() {
+    errorString = null;
     var sImage = _controller.text;
     final containsMeta = sImage.contains("data:image");
     if (containsMeta) {
       sImage = sImage.split(",")[1];
     }
-    Uint8List bytes = base64Decode(sImage);
-    _image = Image.memory(
-      bytes,
-      fit: BoxFit.fitWidth,
-    );
+    try {
+      Uint8List bytes = base64Decode(sImage);
+      _image = Image.memory(
+        bytes,
+        fit: BoxFit.fitWidth,
+      );
+    } catch (e) {
+      errorString = e.toString();
+    }
     setState(() {});
   }
 

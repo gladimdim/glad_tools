@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:glad_tools/components/ui/bordered_all.dart';
 import 'package:glad_tools/models/base_class.dart';
 
@@ -40,6 +41,8 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
                 onPressed: _clear,
                 child: const Text("Clear"),
               ),
+              IconButton(onPressed: _copy, icon: Icon(Icons.copy)),
+              IconButton(onPressed: _paste, icon: Icon(Icons.paste)),
             ],
           ),
           Row(
@@ -75,8 +78,13 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
                   ),
                 ),
               if (_image == null)
-                Text(
-                    "No image to show. Paste text to decode the base64 string into image"),
+                Expanded(
+                  flex: 1,
+                  child: Center(
+                    child: const Text(
+                        "No image to show. Paste text to decode the base64 string into image"),
+                  ),
+                ),
             ],
           ),
         ],
@@ -93,6 +101,17 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
     );
     _image = null;
     setState(() {});
+  }
+
+  void _paste() async {
+    final data = await Clipboard.getData(Clipboard.kTextPlain);
+    if (data != null && data.text != null) {
+      _controller.text = data.text!;
+    }
+  }
+
+  void _copy() {
+    Clipboard.setData(ClipboardData(text: _controller.text));
   }
 
   void _format() {

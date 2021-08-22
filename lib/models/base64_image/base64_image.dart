@@ -85,7 +85,7 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
                   ),
                 ),
               if (_image == null && errorString == null)
-                Expanded(
+                const Expanded(
                   flex: 1,
                   child: Center(
                     child: Center(

@@ -37,14 +37,7 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
                 onPressed: _format,
                 child: const Text("Beautify"),
               ),
-              TextButton(
-                onPressed: _minify,
-                child: const Text("Minify"),
-              ),
-              TextButton(
-                onPressed: _clear,
-                child: const Text("Clear"),
-              ),
+              Text("Spaces: "),
               DropdownButton(
                 onChanged: _whitespaceAmountChanged,
                 value: _whitespaceAmount,
@@ -52,6 +45,14 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
                   return DropdownMenuItem<int>(
                       value: e, child: Text(e.toString()));
                 }).toList(),
+              ),
+              TextButton(
+                onPressed: _minify,
+                child: const Text("Minify"),
+              ),
+              TextButton(
+                onPressed: _clear,
+                child: const Text("Clear"),
               ),
               IconButton(onPressed: _copy, icon: const Icon(Icons.copy)),
               IconButton(onPressed: _paste, icon: const Icon(Icons.paste)),
@@ -65,6 +66,7 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: BorderedAll(
+                    color: errorString == null ? Colors.black : Colors.red,
                     child: TextField(
                       onChanged: (_) => _textChanged(),
                       decoration: const InputDecoration(
@@ -118,20 +120,22 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
   }
 
   void _format() {
-    errorString = null;
-    var map;
-    try {
-      map = jsonDecode(_controller.text);
-    } catch (e) {
-      reportError(e);
-      return;
-    }
+    setState(() {
+      errorString = null;
+      dynamic map;
+      try {
+        map = jsonDecode(_controller.text);
+      } catch (e) {
+        reportError(e);
+        return;
+      }
 
-    _controller.text = processString(map, 0);
+      _controller.text = processString(map, 0);
+    });
   }
 
   void _minify() {
-    var input;
+    dynamic input;
     try {
       input = jsonDecode(_controller.text);
     } catch (e) {

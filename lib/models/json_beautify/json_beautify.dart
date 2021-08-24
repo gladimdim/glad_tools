@@ -24,6 +24,7 @@ class JsonBeautifier extends StatefulWidget {
 class _JsonBeautifierState extends State<JsonBeautifier> {
   final TextEditingController _controller = TextEditingController();
   String? errorString;
+  int _whitespaceAmount = 2;
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +44,14 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
               TextButton(
                 onPressed: _clear,
                 child: const Text("Clear"),
+              ),
+              DropdownButton(
+                onChanged: _whitespaceAmountChanged,
+                value: _whitespaceAmount,
+                items: [2, 4, 8].map((e) {
+                  return DropdownMenuItem<int>(
+                      value: e, child: Text(e.toString()));
+                }).toList(),
               ),
               IconButton(onPressed: _copy, icon: const Icon(Icons.copy)),
               IconButton(onPressed: _paste, icon: const Icon(Icons.paste)),
@@ -135,18 +144,18 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
 
   String processString(input, int base) {
     var inner = "";
-    var shift = 4;
     if (input is List) {
       inner += "[\n";
       for (var element in input) {
-        inner += addSpaces(base) + processString(element, base + shift);
+        inner +=
+            addSpaces(base) + processString(element, base + _whitespaceAmount);
         if (input.last != element) {
           inner += ",\n";
         } else {
           inner += "\n";
         }
       }
-      inner += addSpaces(base + shift) + "]";
+      inner += addSpaces(base + _whitespaceAmount) + "]";
     } else if (input is bool) {
       inner = addSpaces(base) + input.toString();
     } else if (input is String) {
@@ -154,17 +163,25 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
     } else if (input is num) {
       inner += addSpaces(base) + input.toString();
     } else if (input is Map) {
-      inner = addSpaces(base) + "{\n";
+      inner = "{\n";
       for (var entry in input.entries) {
-        inner += addSpaces(base + shift * 2) + "\"${entry.key}\":";
-        inner += processString(entry.value, base + shift);
+        inner += addSpaces(base + _whitespaceAmount * 2) + "\"${entry.key}\": ";
+        var nextBase = base;
+        if (entry.value is bool ||
+            entry.value is String ||
+            entry.value is num) {
+          nextBase = 1;
+        } else {
+          nextBase = base + _whitespaceAmount;
+        }
+        inner += processString(entry.value, nextBase);
         if (input.entries.last.key != entry.key) {
           inner += ",\n";
         } else {
           inner += "\n";
         }
       }
-      inner += addSpaces(base + shift) + "}";
+      inner += addSpaces(base + _whitespaceAmount) + "}";
     }
 
     return inner;
@@ -181,6 +198,15 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
   void reportError(Object e) {
     setState(() {
       errorString = "Error while parsing JSON: ${e.toString()}";
+    });
+  }
+
+  void _whitespaceAmountChanged(int? value) {
+    setState(() {
+      int newValue = value ?? 2;
+
+      _whitespaceAmount = newValue;
+      _format();
     });
   }
 

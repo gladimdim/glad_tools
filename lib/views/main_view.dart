@@ -28,8 +28,17 @@ class _MainViewState extends State<MainView> {
                 (e) => ElevatedButton(
                   child: Row(
                     children: [
-                      e.icon,
-                      Text(e.title),
+                      selected == e
+                          ? const Icon(Icons.subdirectory_arrow_right)
+                          : e.icon,
+                      Text(
+                        e.title,
+                        style: TextStyle(
+                          fontWeight: selected == e
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                        ),
+                      ),
                     ],
                   ),
                   onPressed: () => _selected(e),

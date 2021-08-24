@@ -67,13 +67,17 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
                   padding: const EdgeInsets.all(8.0),
                   child: BorderedAll(
                     color: errorString == null ? Colors.black : Colors.red,
-                    child: TextField(
-                      onChanged: (_) => _textChanged(),
-                      decoration: const InputDecoration(
-                          hintText: "Paste JSON to process"),
-                      minLines: 5,
-                      maxLines: 15,
-                      controller: _controller,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        onChanged: (_) => _textChanged(),
+                        decoration: const InputDecoration(
+                          hintText: "Paste JSON to process",
+                        ),
+                        minLines: 5,
+                        maxLines: 145,
+                        controller: _controller,
+                      ),
                     ),
                   ),
                 ),

@@ -16,7 +16,9 @@ class Base64Image extends ToolObject {
 }
 
 class Base64ImageContent extends StatefulWidget {
-  const Base64ImageContent({Key? key}) : super(key: key);
+  const Base64ImageContent({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _Base64ImageContentState createState() => _Base64ImageContentState();
@@ -47,7 +49,7 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
             ],
           ),
           Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
                 flex: 1,
@@ -61,7 +63,7 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
                         decoration: const InputDecoration(
                             hintText: "Paste base64 image string"),
                         minLines: 15,
-                        maxLines: 100,
+                        maxLines: 20,
                         controller: _controller,
                       ),
                     ),
@@ -69,22 +71,19 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
                 ),
               ),
               if (_image != null)
-                Expanded(
-                  flex: 1,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const Text("Decode result:"),
-                        ConstrainedBox(
-                            constraints: const BoxConstraints(
-                              maxWidth: 500,
-                              minWidth: 500,
-                            ),
-                            child: _image),
-                      ],
-                    ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const Text("Decode result:"),
+                      ConstrainedBox(
+                          constraints: const BoxConstraints(
+                            maxWidth: 500,
+                            minWidth: 500,
+                          ),
+                          child: _image),
+                    ],
                   ),
                 ),
               if (_image == null && errorString == null)
@@ -150,7 +149,6 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
       Uint8List bytes = base64Decode(sImage);
       _image = Image.memory(
         bytes,
-        fit: BoxFit.fitWidth,
       );
     } catch (e) {
       errorString = e.toString();

@@ -5,6 +5,9 @@ abstract class ToolObject {
   final WidgetBuilder contentBuilder;
   final String title;
 
-  const ToolObject(
-      {required this.icon, required this.contentBuilder, required this.title});
+  const ToolObject({
+    required this.icon,
+    required this.contentBuilder,
+    required this.title,
+  });
 }

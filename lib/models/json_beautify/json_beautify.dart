@@ -37,7 +37,7 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
                 onPressed: _format,
                 child: const Text("Beautify"),
               ),
-              Text("Spaces: "),
+              const Text("Spaces: "),
               DropdownButton(
                 onChanged: _whitespaceAmountChanged,
                 value: _whitespaceAmount,
@@ -70,7 +70,6 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextField(
-                        onChanged: (_) => _textChanged(),
                         decoration: const InputDecoration(
                           hintText: "Paste JSON to process",
                         ),
@@ -217,6 +216,4 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
       _format();
     });
   }
-
-  void _textChanged() {}
 }

@@ -146,7 +146,9 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
           inner += "\n";
         }
       }
-      inner += addSpaces(base) + "]";
+      inner += addSpaces(base + shift) + "]";
+    } else if (input is bool) {
+      inner = addSpaces(base) + input.toString();
     } else if (input is String) {
       inner = addSpaces(base) + "\"$input\"";
     } else if (input is num) {
@@ -154,7 +156,7 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
     } else if (input is Map) {
       inner = addSpaces(base) + "{\n";
       for (var entry in input.entries) {
-        inner += addSpaces(base + shift) + "\"${entry.key}\": ";
+        inner += addSpaces(base + shift * 2) + "\"${entry.key}\":";
         inner += processString(entry.value, base + shift);
         if (input.entries.last.key != entry.key) {
           inner += ",\n";
@@ -162,7 +164,7 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
           inner += "\n";
         }
       }
-      inner += addSpaces(base) + "}";
+      inner += addSpaces(base + shift) + "}";
     }
 
     return inner;

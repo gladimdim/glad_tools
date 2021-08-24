@@ -37,6 +37,10 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
                 child: const Text("Beautify"),
               ),
               TextButton(
+                onPressed: _minify,
+                child: const Text("Minify"),
+              ),
+              TextButton(
                 onPressed: _clear,
                 child: const Text("Clear"),
               ),
@@ -114,43 +118,57 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
       return;
     }
 
-    _controller.text = processString(map, 0, "");
+    _controller.text = processString(map, 0);
   }
 
-  String processString(input, int tabs, String str) {
-    var shift = 4;
-    if (input is List) {
-      str += "[\n";
-      for (var element in input) {
-        str += processString(element, tabs + shift, "");
-        if (input.last != element) {
-          str += ",\n";
-        }
-      }
-      str += "\n" + addSpaces(tabs) + "]";
-    } else if (input is String) {
-      str += input;
-    } else if (input is num) {
-      str += input.toString();
-    } else if (input is Map) {
-      str += "{\n";
-      for (var entry in input.entries) {
-        str += addSpaces(shift) + "\"${entry.key}\":";
-        str += processString(entry.value, shift, "");
-        if (input.entries.last.key != entry.key) {
-          str += ",\n";
-        } else {
-          str += "\n";
-        }
-      }
-      str += "}\n";
+  void _minify() {
+    var input;
+    try {
+      input = jsonDecode(_controller.text);
+    } catch (e) {
+      reportError(e);
+      return;
     }
 
-    return addSpaces(tabs) + str;
+    _controller.text = input.toString();
+  }
+
+  String processString(input, int base) {
+    var inner = "";
+    var shift = 4;
+    if (input is List) {
+      inner += "[\n";
+      for (var element in input) {
+        inner += addSpaces(base) + processString(element, base + shift);
+        if (input.last != element) {
+          inner += ",\n";
+        } else {
+          inner += "\n";
+        }
+      }
+      inner += "]";
+    } else if (input is String) {
+      inner = addSpaces(base) + "\"$input\"";
+    } else if (input is num) {
+      inner += addSpaces(base) + input.toString();
+    } else if (input is Map) {
+      inner = addSpaces(base) + "{\n";
+      for (var entry in input.entries) {
+        inner += addSpaces(base) + "\"${entry.key}\": ";
+        inner += processString(entry.value, base + shift);
+        if (input.entries.last.key != entry.key) {
+          inner += ",\n";
+        } else {
+          inner += "\n";
+        }
+      }
+      inner += addSpaces(base) + "}\n";
+    }
+
+    return inner;
   }
 
   String addSpaces(int amount) {
-    amount = amount == 0 ? 4 : amount;
     var result = "";
     for (var i = 0; i < amount; i++) {
       result += " ";

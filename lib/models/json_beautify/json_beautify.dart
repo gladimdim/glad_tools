@@ -111,9 +111,51 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
       map = jsonDecode(_controller.text);
     } catch (e) {
       reportError(e);
+      return;
     }
 
-    _controller.text = map.toString();
+    _controller.text = processString(map, 0, "");
+  }
+
+  String processString(input, int tabs, String str) {
+    var shift = 4;
+    if (input is List) {
+      str += "[\n";
+      for (var element in input) {
+        str += processString(element, tabs + shift, "");
+        if (input.last != element) {
+          str += ",\n";
+        }
+      }
+      str += "\n" + addSpaces(tabs) + "]";
+    } else if (input is String) {
+      str += input;
+    } else if (input is num) {
+      str += input.toString();
+    } else if (input is Map) {
+      str += "{\n";
+      for (var entry in input.entries) {
+        str += addSpaces(shift) + "\"${entry.key}\":";
+        str += processString(entry.value, shift, "");
+        if (input.entries.last.key != entry.key) {
+          str += ",\n";
+        } else {
+          str += "\n";
+        }
+      }
+      str += "}\n";
+    }
+
+    return addSpaces(tabs) + str;
+  }
+
+  String addSpaces(int amount) {
+    amount = amount == 0 ? 4 : amount;
+    var result = "";
+    for (var i = 0; i < amount; i++) {
+      result += " ";
+    }
+    return result;
   }
 
   void reportError(Object e) {

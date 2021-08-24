@@ -7,7 +7,11 @@ class BorderedBottom extends StatelessWidget {
   final Widget child;
 
   const BorderedBottom(
-      {this.width = 3.0, this.color = Colors.black, required this.child});
+      {Key? key,
+      this.width = 3.0,
+      this.color = Colors.black,
+      required this.child})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

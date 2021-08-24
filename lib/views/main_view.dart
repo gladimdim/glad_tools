@@ -25,8 +25,22 @@ class _MainViewState extends State<MainView> {
           title: Text(selected.title),
           actions: actions
               .map(
-                (e) => IconButton(
-                  icon: e.icon,
+                (e) => ElevatedButton(
+                  child: Row(
+                    children: [
+                      selected == e
+                          ? const Icon(Icons.subdirectory_arrow_right)
+                          : e.icon,
+                      Text(
+                        e.title,
+                        style: TextStyle(
+                          fontWeight: selected == e
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                        ),
+                      ),
+                    ],
+                  ),
                   onPressed: () => _selected(e),
                 ),
               )

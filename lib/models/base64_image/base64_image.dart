@@ -54,13 +54,16 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: BorderedAll(
-                    child: TextField(
-                      onChanged: (_) => _textChanged(),
-                      decoration: const InputDecoration(
-                          hintText: "Paste base64 image string"),
-                      minLines: 5,
-                      maxLines: 15,
-                      controller: _controller,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        onChanged: (_) => _textChanged(),
+                        decoration: const InputDecoration(
+                            hintText: "Paste base64 image string"),
+                        minLines: 15,
+                        maxLines: 100,
+                        controller: _controller,
+                      ),
                     ),
                   ),
                 ),

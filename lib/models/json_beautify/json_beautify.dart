@@ -172,7 +172,7 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
     } else if (input is Map) {
       inner = "{\n";
       for (var entry in input.entries) {
-        inner += addSpaces(base + _whitespaceAmount * 2) + "\"${entry.key}\": ";
+        inner += addSpaces(base + _whitespaceAmount) + "\"${entry.key}\": ";
         var nextBase = base;
         if (entry.value is bool ||
             entry.value is String ||
@@ -188,7 +188,7 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
           inner += "\n";
         }
       }
-      inner += addSpaces(base + _whitespaceAmount) + "}";
+      inner += addSpaces(base + base == 0 ? 0 : _whitespaceAmount) + "}";
     }
 
     return inner;

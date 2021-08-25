@@ -125,6 +125,9 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
   void _format() {
     setState(() {
       errorString = null;
+      if (_controller.text.isEmpty) {
+        return;
+      }
       dynamic map;
       try {
         map = jsonDecode(_controller.text);

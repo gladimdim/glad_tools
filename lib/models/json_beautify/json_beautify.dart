@@ -74,7 +74,7 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
                           hintText: "Paste JSON to process",
                         ),
                         minLines: 5,
-                        maxLines: 145,
+                        maxLines: 25,
                         controller: _controller,
                       ),
                     ),
@@ -206,7 +206,8 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
     } else if (input is num) {
       inner += addSpaces(base) + input.toString();
     } else if (input is Map) {
-      inner = "{\n";
+      inner =
+          (base == 0 ? "" : "\n") + addSpaces(base + _whitespaceAmount) + "{\n";
       for (var entry in input.entries) {
         inner += addSpaces(base + _whitespaceAmount) + "\"${entry.key}\": ";
         var nextBase = base;

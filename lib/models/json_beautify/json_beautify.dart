@@ -136,7 +136,7 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
         return;
       }
 
-      _controller.text = processString(map, 0);
+      _controller.text = formatString(map, 0);
     });
   }
 
@@ -149,16 +149,49 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
       return;
     }
 
-    _controller.text = input.toString();
+    _controller.text = _minifyString(input);
   }
 
-  String processString(input, int base) {
+  String _minifyString(input) {
+    var inner = "";
+    if (input is num) {
+      inner = input.toString();
+    } else if (input is String) {
+      inner = "\"${input.toString()}\"";
+    } else if (input is bool) {
+      inner = input.toString();
+    } else if (input is List) {
+      inner = "[";
+      for (var element in input) {
+        inner += _minifyString(element);
+        if (input.last != element) {
+          inner += ",";
+        }
+      }
+      inner += "]";
+    } else if (input is Map) {
+      inner = "{";
+      for (var entry in input.entries) {
+        inner += "\"${entry.key}\":";
+
+        inner += _minifyString(entry.value);
+        if (input.entries.last.key != entry.key) {
+          inner += ",";
+        }
+      }
+      inner += "}";
+    }
+
+    return inner;
+  }
+
+  String formatString(input, int base) {
     var inner = "";
     if (input is List) {
       inner += "[\n";
       for (var element in input) {
         inner +=
-            addSpaces(base) + processString(element, base + _whitespaceAmount);
+            addSpaces(base) + formatString(element, base + _whitespaceAmount);
         if (input.last != element) {
           inner += ",\n";
         } else {
@@ -184,14 +217,14 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
         } else {
           nextBase = base + _whitespaceAmount;
         }
-        inner += processString(entry.value, nextBase);
+        inner += formatString(entry.value, nextBase);
         if (input.entries.last.key != entry.key) {
           inner += ",\n";
         } else {
           inner += "\n";
         }
       }
-      inner += addSpaces(base + base == 0 ? 0 : _whitespaceAmount) + "}";
+      inner += addSpaces(base + _whitespaceAmount) + "}";
     }
 
     return inner;

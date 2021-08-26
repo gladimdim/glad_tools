@@ -28,37 +28,37 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Row(
-            children: [
-              TextButton(
-                onPressed: _format,
-                child: const Text("Beautify"),
-              ),
-              const Text("Spaces: "),
-              DropdownButton(
-                onChanged: _whitespaceAmountChanged,
-                value: _whitespaceAmount,
-                items: [2, 4, 8].map((e) {
-                  return DropdownMenuItem<int>(
-                      value: e, child: Text(e.toString()));
-                }).toList(),
-              ),
-              TextButton(
-                onPressed: _minify,
-                child: const Text("Minify"),
-              ),
-              TextButton(
-                onPressed: _clear,
-                child: const Text("Clear"),
-              ),
-              IconButton(onPressed: _copy, icon: const Icon(Icons.copy)),
-              IconButton(onPressed: _paste, icon: const Icon(Icons.paste)),
-            ],
-          ),
-          Row(
+    return Column(
+      children: [
+        Row(
+          children: [
+            TextButton(
+              onPressed: _format,
+              child: const Text("Beautify"),
+            ),
+            const Text("Spaces: "),
+            DropdownButton(
+              onChanged: _whitespaceAmountChanged,
+              value: _whitespaceAmount,
+              items: [2, 4, 8].map((e) {
+                return DropdownMenuItem<int>(
+                    value: e, child: Text(e.toString()));
+              }).toList(),
+            ),
+            TextButton(
+              onPressed: _minify,
+              child: const Text("Minify"),
+            ),
+            TextButton(
+              onPressed: _clear,
+              child: const Text("Clear"),
+            ),
+            IconButton(onPressed: _copy, icon: const Icon(Icons.copy)),
+            IconButton(onPressed: _paste, icon: const Icon(Icons.paste)),
+          ],
+        ),
+        SingleChildScrollView(
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
@@ -74,7 +74,7 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
                           hintText: "Paste JSON to process",
                         ),
                         minLines: 5,
-                        maxLines: 25,
+                        maxLines: (MediaQuery.of(context).size.height ~/ 30),
                         controller: _controller,
                       ),
                     ),
@@ -94,8 +94,8 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
                 ),
             ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

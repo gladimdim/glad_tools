@@ -31,24 +31,24 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Row(
-            children: [
-              TextButton(
-                onPressed: _format,
-                child: const Text("Decode"),
-              ),
-              TextButton(
-                onPressed: _clear,
-                child: const Text("Clear"),
-              ),
-              IconButton(onPressed: _copy, icon: const Icon(Icons.copy)),
-              IconButton(onPressed: _paste, icon: const Icon(Icons.paste)),
-            ],
-          ),
-          Row(
+    return Column(
+      children: [
+        Row(
+          children: [
+            TextButton(
+              onPressed: _format,
+              child: const Text("Decode"),
+            ),
+            TextButton(
+              onPressed: _clear,
+              child: const Text("Clear"),
+            ),
+            IconButton(onPressed: _copy, icon: const Icon(Icons.copy)),
+            IconButton(onPressed: _paste, icon: const Icon(Icons.paste)),
+          ],
+        ),
+        SingleChildScrollView(
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
@@ -63,7 +63,7 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
                         decoration: const InputDecoration(
                             hintText: "Paste base64 image string"),
                         minLines: 15,
-                        maxLines: 20,
+                        maxLines: (MediaQuery.of(context).size.height ~/ 30),
                         controller: _controller,
                       ),
                     ),
@@ -109,8 +109,8 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
                 ),
             ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

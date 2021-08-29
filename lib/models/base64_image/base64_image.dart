@@ -25,7 +25,7 @@ class Base64ImageContent extends StatefulWidget {
 }
 
 class _Base64ImageContentState extends State<Base64ImageContent> {
-  final TextEditingController _controller = TextEditingController();
+  String? _base64;
   Image? _image;
   String? errorString;
 
@@ -47,100 +47,87 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
             IconButton(onPressed: _paste, icon: const Icon(Icons.paste)),
           ],
         ),
-        SingleChildScrollView(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        if (_image != null)
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Expanded(
-                flex: 1,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: BorderedAll(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextField(
-                        onChanged: (_) => _textChanged(),
-                        decoration: const InputDecoration(
-                            hintText: "Paste base64 image string"),
-                        minLines: 15,
-                        maxLines: (MediaQuery.of(context).size.height ~/ 30),
-                        controller: _controller,
-                      ),
-                    ),
+              const Text("Decode result. Black border is not a part of your image."),
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height - 112,
+                child: BorderedAll(
+                  child: InteractiveViewer(
+                    child: _image!,
+                    minScale: 0.1,
+                    constrained: false,
+                    maxScale: 3.0,
                   ),
                 ),
               ),
-              if (_image != null)
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      const Text("Decode result:"),
-                      ConstrainedBox(
-                          constraints: const BoxConstraints(
-                            maxWidth: 500,
-                            minWidth: 500,
-                          ),
-                          child: _image),
-                    ],
-                  ),
-                ),
-              if (_image == null && errorString == null)
-                const Expanded(
-                  flex: 1,
-                  child: Center(
-                    child: Center(
-                      child: Text(
-                          "No image to show. Paste text to decode the base64 string into image"),
-                    ),
-                  ),
-                ),
-              if (errorString != null)
-                Expanded(
-                  flex: 1,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(
-                          "An error has occurred while converting to image: $errorString"),
-                    ),
-                  ),
-                ),
             ],
           ),
-        ),
+        if (_image == null && errorString == null)
+          Expanded(
+            flex: 1,
+            child: Center(
+              child: Column(
+                children: [
+                  Text(
+                      "No image to show. Paste text to decode the base64 string into image"),
+                  IconButton(
+                    onPressed: _paste,
+                    icon: const Icon(
+                      Icons.paste,
+                    ),
+                    iconSize: 256,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        if (errorString != null)
+          Expanded(
+            flex: 1,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(
+                child: Text(
+                    "An error has occurred while converting to image: $errorString"),
+              ),
+            ),
+          ),
       ],
     );
   }
 
   void _clear() {
-    _controller.value = TextEditingValue(
-      text: "",
-      selection: TextSelection.fromPosition(
-        const TextPosition(offset: 0),
-      ),
-    );
     _image = null;
     errorString = null;
-    setState(() {});
+    setState(() {
+      _base64 = null;
+      _image = null;
+      errorString = null;
+    });
   }
 
   void _paste() async {
     final data = await Clipboard.getData(Clipboard.kTextPlain);
     if (data != null && data.text != null) {
-      _controller.text = data.text!;
+      _base64 = data.text!;
     }
     _format();
   }
 
   void _copy() {
-    Clipboard.setData(ClipboardData(text: _controller.text));
+    Clipboard.setData(ClipboardData(text: _base64));
   }
 
   void _format() {
     errorString = null;
-    var sImage = _controller.text;
+    var sImage = _base64;
+    if (sImage == null) {
+      return;
+    }
     final containsMeta = sImage.contains("data:image");
     if (containsMeta) {
       sImage = sImage.split(",")[1];
@@ -154,11 +141,5 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
       errorString = e.toString();
     }
     setState(() {});
-  }
-
-  void _textChanged() {
-    setState(() {
-      _image = null;
-    });
   }
 }

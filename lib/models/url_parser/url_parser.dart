@@ -149,7 +149,7 @@ class _Base64ImageContentState extends State<UrlParserContent> {
     setState(() {
       url = null;
       errorString = null;
-
+      uri = null;
       _controller.clear();
       _pathController.clear();
       _hostController.clear();

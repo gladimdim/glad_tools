@@ -42,12 +42,13 @@ class QueryListView extends StatelessWidget {
 
   void updateQuery(String? value, MapEntry<String, String> query) {
     Map<String, String> map = Map.from(queryParameters);
-    map.removeWhere((key, value) => key == query.key);
+
     if (value == null) {
+      map.removeWhere((key, value) => key == query.key);
       onQueryUpdate(map);
+    } else {
+      map.update(query.key, (v) => value);
     }
-    MapEntry<String, String> newEntry = MapEntry(query.key, value!);
-    map.addEntries([newEntry]);
     onQueryUpdate(map);
   }
 }

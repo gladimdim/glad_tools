@@ -21,16 +21,23 @@ class QueryListView extends StatelessWidget {
       widgets.add(
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: TextField(
-            decoration: InputDecoration(
-                label: Text(query.key),
-                border: const OutlineInputBorder(
-                  borderSide: BorderSide(),
-                )),
-            controller: c,
-            onSubmitted: (String? value) {
-              updateQuery(value, query);
-            },
+          child: Row(
+            children: [
+              IconButton(onPressed: () => _removeQueryParam(query), icon: const Icon(Icons.remove_circle)),
+              Expanded(
+                child: TextField(
+                  decoration: InputDecoration(
+                      label: Text(query.key),
+                      border: const OutlineInputBorder(
+                        borderSide: BorderSide(),
+                      )),
+                  controller: c,
+                  onSubmitted: (String? value) {
+                    updateQuery(value, query);
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       );
@@ -52,5 +59,9 @@ class QueryListView extends StatelessWidget {
       map.update(query.key, (v) => value);
     }
     onQueryUpdate(map);
+  }
+
+  void _removeQueryParam(MapEntry<String, String> query) {
+    updateQuery(null, query);
   }
 }

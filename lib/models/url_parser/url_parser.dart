@@ -185,7 +185,8 @@ class _Base64ImageContentState extends State<UrlParserContent> {
       _hostController.text = parsedUri.host;
       _pathController.text = parsedUri.path;
       _queryController.text = parsedUri.query;
-      _updateMainInputWithUri(parsedUri);
+      uri = parsedUri;
+      url = parsedUri.toString();
     });
   }
 

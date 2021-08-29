@@ -35,8 +35,10 @@ class QueryListView extends StatelessWidget {
         ),
       );
     }
-    return Column(
-      children: widgets,
+    return SingleChildScrollView(
+      child: Column(
+        children: widgets,
+      ),
     );
   }
 

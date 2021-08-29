@@ -127,11 +127,14 @@ class _Base64ImageContentState extends State<UrlParserContent> {
           ],
         ),
         if (uri != null && uri!.hasQuery)
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: QueryListView(
-              queryParameters: uri!.queryParameters,
-              onQueryUpdate: _onQueryUpdate,
+          SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height - 250),
+              child: QueryListView(
+                queryParameters: uri!.queryParameters,
+                onQueryUpdate: _onQueryUpdate,
+              ),
             ),
           ),
       ],
@@ -141,6 +144,7 @@ class _Base64ImageContentState extends State<UrlParserContent> {
   _updateMainInputWithUri(Uri uri) {
     setState(() {
       _controller.text = uri.toString();
+      url = uri.toString();
       _parse();
     });
   }
@@ -181,7 +185,7 @@ class _Base64ImageContentState extends State<UrlParserContent> {
       _hostController.text = parsedUri.host;
       _pathController.text = parsedUri.path;
       _queryController.text = parsedUri.query;
-      uri = parsedUri;
+      _updateMainInputWithUri(parsedUri);
     });
   }
 

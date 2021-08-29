@@ -26,8 +26,11 @@ class UrlParserContent extends StatefulWidget {
 
 class _Base64ImageContentState extends State<UrlParserContent> {
   final TextEditingController _controller = TextEditingController();
+  final TextEditingController _hostController = TextEditingController();
+  final TextEditingController _pathController = TextEditingController();
   String? url;
   String? errorString;
+  Uri? uri;
 
   @override
   Widget build(BuildContext context) {
@@ -54,8 +57,53 @@ class _Base64ImageContentState extends State<UrlParserContent> {
           controller: _controller,
           onSubmitted: (_) => _parse(),
         ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: 300,
+                ),
+                child: TextField(
+                  decoration: const InputDecoration(label: Text("Host")),
+                  controller: _hostController,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: 300,
+                ),
+                child: TextField(
+                  decoration: const InputDecoration(label: Text("Path")),
+                  controller: _pathController,
+                  onSubmitted: (String? value) {
+                    if (uri == null) {
+                      return;
+                    }
+                    if (value != null) {
+                      uri!.replace(path: value);
+                    }
+                    _updateMainInputWithUri(uri!);
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
       ],
     );
+  }
+
+  _updateMainInputWithUri(Uri uri) {
+    setState(() {
+      _controller.text = uri.toString();
+    });
   }
 
   _clear() {
@@ -84,13 +132,16 @@ class _Base64ImageContentState extends State<UrlParserContent> {
     if (_url == "") {
       return;
     }
-    final uri = Uri.parse(_url);
-    print(uri.path);
-    print(uri.fragment);
-    print(uri.host);
-    print(uri.data);
-    print(uri.origin);
-    print(uri.scheme);
-    print(uri.queryParametersAll);
+    final parsedUri = Uri.parse(_url);
+    _hostController.text = parsedUri.host;
+    _pathController.text = parsedUri.path;
+    uri = parsedUri;
+  }
+
+  void dispose() {
+    _controller.dispose();
+    _pathController.dispose();
+    _hostController.dispose();
+    super.dispose();
   }
 }

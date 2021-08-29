@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:glad_tools/components/ui/bordered_all.dart';
 import 'package:glad_tools/models/base_class.dart';
+import 'package:glad_tools/models/url_parser/query_list.dart';
 
 class UrlParser extends ToolObject {
   UrlParser()
@@ -28,6 +29,7 @@ class _Base64ImageContentState extends State<UrlParserContent> {
   final TextEditingController _controller = TextEditingController();
   final TextEditingController _hostController = TextEditingController();
   final TextEditingController _pathController = TextEditingController();
+  final TextEditingController _queryController = TextEditingController();
   String? url;
   String? errorString;
   Uri? uri;
@@ -50,35 +52,44 @@ class _Base64ImageContentState extends State<UrlParserContent> {
             IconButton(onPressed: _paste, icon: const Icon(Icons.paste)),
           ],
         ),
-        TextField(
-          decoration: const InputDecoration(
-            hintText: "Paste URL to process",
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            decoration: const InputDecoration(
+              hintText: "Paste URL to process",
+              label: Text("Full URL"),
+            ),
+            controller: _controller,
+            onSubmitted: (_) => _parse(),
           ),
-          controller: _controller,
-          onSubmitted: (_) => _parse(),
         ),
         Row(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 300,
-                ),
+            Expanded(
+              flex: 1,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   decoration: const InputDecoration(label: Text("Host")),
                   controller: _hostController,
+                  onSubmitted: (String? value) {
+                    if (uri == null) {
+                      return;
+                    }
+                    if (value != null) {
+                      uri = uri!.replace(host: value);
+                    }
+                    _updateMainInputWithUri(uri!);
+                  },
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 300,
-                ),
+            Expanded(
+              flex: 1,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   decoration: const InputDecoration(label: Text("Path")),
                   controller: _pathController,
@@ -87,7 +98,26 @@ class _Base64ImageContentState extends State<UrlParserContent> {
                       return;
                     }
                     if (value != null) {
-                      uri!.replace(path: value);
+                      uri = uri!.replace(path: value);
+                    }
+                    _updateMainInputWithUri(uri!);
+                  },
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  decoration: const InputDecoration(label: Text("Query")),
+                  controller: _queryController,
+                  onSubmitted: (String? value) {
+                    if (uri == null) {
+                      return;
+                    }
+                    if (value != null) {
+                      uri = uri!.replace(query: value);
                     }
                     _updateMainInputWithUri(uri!);
                   },
@@ -96,6 +126,14 @@ class _Base64ImageContentState extends State<UrlParserContent> {
             ),
           ],
         ),
+        if (uri != null && uri!.hasQuery)
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: QueryListView(
+              queryParameters: uri!.queryParameters,
+              onQueryUpdate: _onQueryUpdate,
+            ),
+          ),
       ],
     );
   }
@@ -103,6 +141,7 @@ class _Base64ImageContentState extends State<UrlParserContent> {
   _updateMainInputWithUri(Uri uri) {
     setState(() {
       _controller.text = uri.toString();
+      _parse();
     });
   }
 
@@ -110,6 +149,11 @@ class _Base64ImageContentState extends State<UrlParserContent> {
     setState(() {
       url = null;
       errorString = null;
+
+      _controller.clear();
+      _pathController.clear();
+      _hostController.clear();
+      _queryController.clear();
     });
   }
 
@@ -133,15 +177,24 @@ class _Base64ImageContentState extends State<UrlParserContent> {
       return;
     }
     final parsedUri = Uri.parse(_url);
-    _hostController.text = parsedUri.host;
-    _pathController.text = parsedUri.path;
-    uri = parsedUri;
+    setState(() {
+      _hostController.text = parsedUri.host;
+      _pathController.text = parsedUri.path;
+      _queryController.text = parsedUri.query;
+      uri = parsedUri;
+    });
   }
 
+  @override
   void dispose() {
     _controller.dispose();
     _pathController.dispose();
     _hostController.dispose();
+    _queryController.dispose();
     super.dispose();
+  }
+
+  void _onQueryUpdate(Map<String, String> queryParameters) {
+    _updateMainInputWithUri(uri!.replace(queryParameters: queryParameters));
   }
 }

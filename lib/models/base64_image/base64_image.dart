@@ -72,7 +72,7 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
             child: Center(
               child: Column(
                 children: [
-                  Text(
+                  const Text(
                       "No image to show. Paste text to decode the base64 string into image"),
                   IconButton(
                     onPressed: _paste,

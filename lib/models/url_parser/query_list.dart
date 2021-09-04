@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:glad_tools/components/ui/bordered_all.dart';
 
 class QueryListView extends StatelessWidget {
   final Map<String, String> queryParameters;

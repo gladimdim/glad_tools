@@ -1,16 +1,13 @@
-import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:glad_tools/components/ui/bordered_all.dart';
 import 'package:glad_tools/models/base_class.dart';
 import 'package:glad_tools/models/url_parser/query_list.dart';
 
 class UrlParser extends ToolObject {
   UrlParser()
       : super(
-          title: "URL Parser",
+          title: "URL Tools",
           icon: const Icon(Icons.link),
           contentBuilder: (context) => const UrlParserContent(),
         );
@@ -30,7 +27,6 @@ class _Base64ImageContentState extends State<UrlParserContent> {
   final TextEditingController _hostController = TextEditingController();
   final TextEditingController _pathController = TextEditingController();
   final TextEditingController _queryController = TextEditingController();
-  String? url;
   String? errorString;
   Uri? uri;
 
@@ -50,6 +46,9 @@ class _Base64ImageContentState extends State<UrlParserContent> {
             ),
             IconButton(onPressed: _copy, icon: const Icon(Icons.copy)),
             IconButton(onPressed: _paste, icon: const Icon(Icons.paste)),
+            TextButton(onPressed: _decodeUrl, child: Text("Decode")),
+            TextButton(onPressed: _encodeUrl, child: Text("Encode")),
+
           ],
         ),
         Padding(
@@ -81,7 +80,9 @@ class _Base64ImageContentState extends State<UrlParserContent> {
                     if (value != null) {
                       uri = uri!.replace(host: value);
                     }
-                    _updateMainInputWithUri(uri!);
+                    _controller.text = uri.toString();
+                    _parse();
+                    // _updateMainInputWithUri(uri!);
                   },
                 ),
               ),
@@ -100,7 +101,9 @@ class _Base64ImageContentState extends State<UrlParserContent> {
                     if (value != null) {
                       uri = uri!.replace(path: value);
                     }
-                    _updateMainInputWithUri(uri!);
+                    _controller.text = uri.toString();
+                    _parse();
+                    // _updateMainInputWithUri(uri!);
                   },
                 ),
               ),
@@ -119,7 +122,9 @@ class _Base64ImageContentState extends State<UrlParserContent> {
                     if (value != null) {
                       uri = uri!.replace(query: value);
                     }
-                    _updateMainInputWithUri(uri!);
+                    _controller.text = uri.toString();
+                    _parse();
+                    // _updateMainInputWithUri(uri!);
                   },
                 ),
               ),
@@ -144,14 +149,12 @@ class _Base64ImageContentState extends State<UrlParserContent> {
   _updateMainInputWithUri(Uri uri) {
     setState(() {
       _controller.text = uri.toString();
-      url = uri.toString();
       _parse();
     });
   }
 
   _clear() {
     setState(() {
-      url = null;
       errorString = null;
       uri = null;
       _controller.clear();
@@ -162,31 +165,27 @@ class _Base64ImageContentState extends State<UrlParserContent> {
   }
 
   _copy() {
-    if (url != null) {
-      Clipboard.setData(ClipboardData(text: url));
+    if (_controller.text != "") {
+      Clipboard.setData(ClipboardData(text: _controller.text));
     }
   }
 
   void _paste() async {
     final data = await Clipboard.getData(Clipboard.kTextPlain);
     if (data != null && data.text != null) {
-      url = data.text!;
     }
     _parse();
   }
 
   void _parse() {
     final _url = _controller.text;
-    if (_url == "") {
-      return;
-    }
     final parsedUri = Uri.parse(_url);
     setState(() {
       _hostController.text = parsedUri.host;
       _pathController.text = parsedUri.path;
       _queryController.text = parsedUri.query;
       uri = parsedUri;
-      url = parsedUri.toString();
+
     });
   }
 
@@ -200,6 +199,33 @@ class _Base64ImageContentState extends State<UrlParserContent> {
   }
 
   void _onQueryUpdate(Map<String, String> queryParameters) {
-    _updateMainInputWithUri(uri!.replace(queryParameters: queryParameters));
+    final newUri = uri!.replace(queryParameters: queryParameters);
+    _controller.text = newUri.toString();
+    _parse();
+    // _updateMainInputWithUri(uri!.replace(queryParameters: queryParameters));
+  }
+
+  void _encodeUrl() {
+    final _url = _controller.text;
+
+    final encoded = Uri.encodeFull(_url);
+    _controller.text = encoded;
+    _parse();
+    // _updateMainInputWithUri(Uri.parse(encoded));
+  }
+
+  void _decodeUrl() {
+    final _url = _controller.text;
+
+    final decoded = Uri.decodeFull(_url);
+    _controller.text = decoded;
+    _parse();
+    // update main input will replace controller's text with a percent-encoded value
+    // as we use Uri.toString method there. Here we force text field to have a readable URL
+    // setState(() {
+    //   uri = Uri.parse(decoded);
+    //   _controller.text = decoded;
+    // });
+
   }
 }

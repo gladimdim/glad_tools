@@ -19,6 +19,12 @@ Works on:
 - [x] Linux
 - [x] macOS
 
+# Download
+
+[Windows 10 Build](https://github.com/gladimdim/glad_tools/files/7110106/glad_tools_windows.zip).
+
+ [Download VC++ Redistributable](https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0) pacakage before launching. (I guess you already have it installed).
+
 # Why
 
 Everyday all of us have to convert images, parse URLs, minify JSONs. We all use some online tools found in Google Top-5 results.

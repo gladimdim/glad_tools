@@ -54,7 +54,7 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
               const Text("Decode result. Black border is not a part of your image."),
               SizedBox(
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height - 112,
+                height: MediaQuery.of(context).size.height - 115,
                 child: BorderedAll(
                   child: InteractiveViewer(
                     child: _image!,

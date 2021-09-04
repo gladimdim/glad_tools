@@ -27,6 +27,7 @@ class _Base64ImageContentState extends State<UrlParserContent> {
   final TextEditingController _hostController = TextEditingController();
   final TextEditingController _pathController = TextEditingController();
   final TextEditingController _queryController = TextEditingController();
+  final TextEditingController _schemeController = TextEditingController();
   String? errorString;
   Uri? uri;
 
@@ -46,8 +47,8 @@ class _Base64ImageContentState extends State<UrlParserContent> {
             ),
             IconButton(onPressed: _copy, icon: const Icon(Icons.copy)),
             IconButton(onPressed: _paste, icon: const Icon(Icons.paste)),
-            TextButton(onPressed: _decodeUrl, child: Text("Decode")),
-            TextButton(onPressed: _encodeUrl, child: Text("Encode")),
+            TextButton(onPressed: _decodeUrl, child: const Text("Decode")),
+            TextButton(onPressed: _encodeUrl, child: const Text("Encode")),
 
           ],
         ),
@@ -71,6 +72,26 @@ class _Base64ImageContentState extends State<UrlParserContent> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
+                  decoration: const InputDecoration(label: Text("Scheme")),
+                  controller: _schemeController,
+                  onSubmitted: (String? value) {
+                    if (uri == null) {
+                      return;
+                    }
+                    if (value != null) {
+                      uri = uri!.replace(scheme: value);
+                    }
+                    _controller.text = uri.toString();
+                    _parse();
+                  },
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
                   decoration: const InputDecoration(label: Text("Host")),
                   controller: _hostController,
                   onSubmitted: (String? value) {
@@ -87,6 +108,12 @@ class _Base64ImageContentState extends State<UrlParserContent> {
                 ),
               ),
             ),
+
+
+          ],
+        ),
+        Row(
+          children: [
             Expanded(
               flex: 1,
               child: Padding(
@@ -146,13 +173,6 @@ class _Base64ImageContentState extends State<UrlParserContent> {
     );
   }
 
-  _updateMainInputWithUri(Uri uri) {
-    setState(() {
-      _controller.text = uri.toString();
-      _parse();
-    });
-  }
-
   _clear() {
     setState(() {
       errorString = null;
@@ -161,6 +181,7 @@ class _Base64ImageContentState extends State<UrlParserContent> {
       _pathController.clear();
       _hostController.clear();
       _queryController.clear();
+      _schemeController.clear();
     });
   }
 
@@ -185,6 +206,7 @@ class _Base64ImageContentState extends State<UrlParserContent> {
       _hostController.text = parsedUri.host;
       _pathController.text = parsedUri.path;
       _queryController.text = parsedUri.query;
+      _schemeController.text = parsedUri.scheme;
       uri = parsedUri;
 
     });
@@ -196,6 +218,7 @@ class _Base64ImageContentState extends State<UrlParserContent> {
     _pathController.dispose();
     _hostController.dispose();
     _queryController.dispose();
+    _schemeController.dispose();
     super.dispose();
   }
 
@@ -203,7 +226,6 @@ class _Base64ImageContentState extends State<UrlParserContent> {
     final newUri = uri!.replace(queryParameters: queryParameters);
     _controller.text = newUri.toString();
     _parse();
-    // _updateMainInputWithUri(uri!.replace(queryParameters: queryParameters));
   }
 
   void _encodeUrl() {

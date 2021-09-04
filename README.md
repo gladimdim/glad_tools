@@ -42,3 +42,21 @@ flutter run -d Windows
 flutter run -d Linux
 flutter run -d macOS
 ```
+
+# Examples
+
+## Base64 Image
+
+![Base64 Image](images/base64.png)
+
+## URL Parser
+
+![URL Parser](images/url_parser.png)
+
+## JSON Tools
+
+### Beautify:
+![Beautify](images/json_beautify.png)
+
+### Minify:
+![Minify](images/json_minify.png)

@@ -173,6 +173,7 @@ class _Base64ImageContentState extends State<UrlParserContent> {
   void _paste() async {
     final data = await Clipboard.getData(Clipboard.kTextPlain);
     if (data != null && data.text != null) {
+      _controller.text = data.text!;
     }
     _parse();
   }

@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:glad_tools/models/base_class.dart';
 import 'package:glad_tools/models/url_parser/query_list.dart';
+import 'package:glad_tools/views/main_view.dart';
 
 class UrlParser extends ToolObject {
+  static dynamic rootObject;
   UrlParser()
       : super(
           title: "URL Tools",
@@ -32,6 +34,15 @@ class _Base64ImageContentState extends State<UrlParserContent> {
   Uri? uri;
 
   @override
+  void initState() {
+    super.initState();
+    if (UrlParser.rootObject != null) {
+      _controller.text = UrlParser.rootObject as String;
+      _parse();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
@@ -52,123 +63,129 @@ class _Base64ImageContentState extends State<UrlParserContent> {
 
           ],
         ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextField(
-            decoration: const InputDecoration(
-              hintText: "Paste URL to process",
-              label: Text("Full URL"),
-            ),
-            controller: _controller,
-            onSubmitted: (_) => _parse(),
+        ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height - TOP_BAR_HEIGHT,
           ),
-        ),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  decoration: const InputDecoration(label: Text("Scheme")),
-                  controller: _schemeController,
-                  onSubmitted: (String? value) {
-                    if (uri == null) {
-                      return;
-                    }
-                    if (value != null) {
-                      uri = uri!.replace(scheme: value);
-                    }
-                    _controller.text = uri.toString();
-                    _parse();
-                  },
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    decoration: const InputDecoration(
+                      hintText: "Paste URL to process",
+                      label: Text("Full URL"),
+                    ),
+                    controller: _controller,
+                    onSubmitted: (_) => _parse(),
+                  ),
                 ),
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  decoration: const InputDecoration(label: Text("Host")),
-                  controller: _hostController,
-                  onSubmitted: (String? value) {
-                    if (uri == null) {
-                      return;
-                    }
-                    if (value != null) {
-                      uri = uri!.replace(host: value);
-                    }
-                    _controller.text = uri.toString();
-                    _parse();
-                    // _updateMainInputWithUri(uri!);
-                  },
-                ),
-              ),
-            ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          decoration: const InputDecoration(label: Text("Scheme")),
+                          controller: _schemeController,
+                          onSubmitted: (String? value) {
+                            if (uri == null) {
+                              return;
+                            }
+                            if (value != null) {
+                              uri = uri!.replace(scheme: value);
+                            }
+                            _controller.text = uri.toString();
+                            _parse();
+                          },
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          decoration: const InputDecoration(label: Text("Host")),
+                          controller: _hostController,
+                          onSubmitted: (String? value) {
+                            if (uri == null) {
+                              return;
+                            }
+                            if (value != null) {
+                              uri = uri!.replace(host: value);
+                            }
+                            _controller.text = uri.toString();
+                            _parse();
+                            // _updateMainInputWithUri(uri!);
+                          },
+                        ),
+                      ),
+                    ),
 
 
-          ],
-        ),
-        Row(
-          children: [
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  decoration: const InputDecoration(label: Text("Path")),
-                  controller: _pathController,
-                  onSubmitted: (String? value) {
-                    if (uri == null) {
-                      return;
-                    }
-                    if (value != null) {
-                      uri = uri!.replace(path: value);
-                    }
-                    _controller.text = uri.toString();
-                    _parse();
-                    // _updateMainInputWithUri(uri!);
-                  },
+                  ],
                 ),
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  decoration: const InputDecoration(label: Text("Query")),
-                  controller: _queryController,
-                  onSubmitted: (String? value) {
-                    if (uri == null) {
-                      return;
-                    }
-                    if (value != null) {
-                      uri = uri!.replace(query: value);
-                    }
-                    _controller.text = uri.toString();
-                    _parse();
-                    // _updateMainInputWithUri(uri!);
-                  },
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          decoration: const InputDecoration(label: Text("Path")),
+                          controller: _pathController,
+                          onSubmitted: (String? value) {
+                            if (uri == null) {
+                              return;
+                            }
+                            if (value != null) {
+                              uri = uri!.replace(path: value);
+                            }
+                            _controller.text = uri.toString();
+                            _parse();
+                            // _updateMainInputWithUri(uri!);
+                          },
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          decoration: const InputDecoration(label: Text("Query")),
+                          controller: _queryController,
+                          onSubmitted: (String? value) {
+                            if (uri == null) {
+                              return;
+                            }
+                            if (value != null) {
+                              uri = uri!.replace(query: value);
+                            }
+                            _controller.text = uri.toString();
+                            _parse();
+                            // _updateMainInputWithUri(uri!);
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ),
-          ],
-        ),
-        if (uri != null && uri!.hasQuery)
-          SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height - 250),
-              child: QueryListView(
-                queryParameters: uri!.queryParameters,
-                onQueryUpdate: _onQueryUpdate,
-              ),
+                if (uri != null && uri!.hasQuery)
+                  QueryListView(
+                    queryParameters: uri!.queryParameters,
+                    onQueryUpdate: _onQueryUpdate,
+                  ),
+              ],
             ),
           ),
+        ),
+
       ],
     );
   }
@@ -177,6 +194,7 @@ class _Base64ImageContentState extends State<UrlParserContent> {
     setState(() {
       errorString = null;
       uri = null;
+      UrlParser.rootObject = null;
       _controller.clear();
       _pathController.clear();
       _hostController.clear();
@@ -201,6 +219,7 @@ class _Base64ImageContentState extends State<UrlParserContent> {
 
   void _parse() {
     final _url = _controller.text;
+    UrlParser.rootObject = _url;
     final parsedUri = Uri.parse(_url);
     setState(() {
       _hostController.text = parsedUri.host;
@@ -243,12 +262,6 @@ class _Base64ImageContentState extends State<UrlParserContent> {
     final decoded = Uri.decodeFull(_url);
     _controller.text = decoded;
     _parse();
-    // update main input will replace controller's text with a percent-encoded value
-    // as we use Uri.toString method there. Here we force text field to have a readable URL
-    // setState(() {
-    //   uri = Uri.parse(decoded);
-    //   _controller.text = decoded;
-    // });
 
   }
 }

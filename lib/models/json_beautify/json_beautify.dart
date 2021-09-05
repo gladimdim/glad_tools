@@ -6,6 +6,8 @@ import 'package:glad_tools/components/ui/bordered_all.dart';
 import 'package:glad_tools/models/base_class.dart';
 
 class JsonBeautify extends ToolObject {
+  static dynamic rootObject;
+
   JsonBeautify()
       : super(
           title: "JSON Beautify",
@@ -25,6 +27,15 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
   final TextEditingController _controller = TextEditingController();
   String? errorString;
   int _whitespaceAmount = 2;
+
+  @override
+  void initState() {
+    super.initState();
+    if (JsonBeautify.rootObject != null) {
+      _controller.text = JsonBeautify.rootObject as String;
+      _format();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,6 +118,7 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
       ),
     );
     errorString = null;
+    JsonBeautify.rootObject = null;
     setState(() {});
   }
 
@@ -123,6 +135,7 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
   }
 
   void _format() {
+    JsonBeautify.rootObject = _controller.text;
     setState(() {
       errorString = null;
       if (_controller.text.isEmpty) {

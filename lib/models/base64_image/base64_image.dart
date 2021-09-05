@@ -7,6 +7,8 @@ import 'package:glad_tools/components/ui/bordered_all.dart';
 import 'package:glad_tools/models/base_class.dart';
 
 class Base64Image extends ToolObject {
+
+  static dynamic rootObject;
   Base64Image()
       : super(
           title: "Base64 Image Decoder",
@@ -28,6 +30,15 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
   String? _base64;
   Image? _image;
   String? errorString;
+
+  @override
+  void initState() {
+    super.initState();
+    if (Base64Image.rootObject != null) {
+      _base64 = Base64Image.rootObject as String;
+      _format();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,9 +112,9 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
   }
 
   void _clear() {
-    _image = null;
-    errorString = null;
     setState(() {
+      Base64Image.rootObject = null;
+
       _base64 = null;
       _image = null;
       errorString = null;
@@ -114,6 +125,8 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
     final data = await Clipboard.getData(Clipboard.kTextPlain);
     if (data != null && data.text != null) {
       _base64 = data.text!;
+
+      Base64Image.rootObject = _base64;
     }
     _format();
   }

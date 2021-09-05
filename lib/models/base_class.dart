@@ -4,8 +4,9 @@ abstract class ToolObject {
   final Icon icon;
   final WidgetBuilder contentBuilder;
   final String title;
+  static dynamic rootObject;
 
-  const ToolObject({
+   ToolObject({
     required this.icon,
     required this.contentBuilder,
     required this.title,

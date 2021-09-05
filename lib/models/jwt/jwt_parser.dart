@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:glad_tools/components/ui/bordered_all.dart';
 import 'package:glad_tools/models/base_class.dart';
 
 class JwtParser extends ToolObject {
@@ -48,6 +49,7 @@ class _Base64ImageContentState extends State<JwtParserContent> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: TextField(
+            maxLines: 2,
             decoration: const InputDecoration(
               label: Text("JWT Token"),
             ),
@@ -67,16 +69,29 @@ class _Base64ImageContentState extends State<JwtParserContent> {
                 child: Column(
                   children: [
                     for (var entry in _parsed!.entries)
-                      Row(
-                        children: [
-                          SelectableText(
-                            entry.key,
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: BorderedAll(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                SelectableText(
+                                  entry.key,
+                                  style: Theme.of(context).textTheme.headline6,
+                                ),
+                                Text(
+                                  ": ",
+                                  style: Theme.of(context).textTheme.headline6,
+                                ),
+                                SelectableText(
+                                  entry.value.toString(),
+                                  style: Theme.of(context).textTheme.headline6,
+                                ),
+                              ],
+                            ),
                           ),
-                          const Text(": "),
-                          SelectableText(
-                            entry.value.toString(),
-                          ),
-                        ],
+                        ),
                       ),
                   ],
                 ),

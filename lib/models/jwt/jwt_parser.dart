@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:glad_tools/components/ui/bordered_all.dart';
 import 'package:glad_tools/models/base_class.dart';
+import 'package:glad_tools/views/main_view.dart';
 
 class JwtParser extends ToolObject {
   JwtParser()
@@ -46,57 +47,65 @@ class _Base64ImageContentState extends State<JwtParserContent> {
             IconButton(onPressed: _paste, icon: const Icon(Icons.paste)),
           ],
         ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextField(
-            maxLines: 2,
-            decoration: const InputDecoration(
-              label: Text("JWT Token"),
-            ),
-            controller: _controller,
-          ),
-        ),
+
         if (_parsed != null)
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                "Decoded payload: ",
-                style: Theme.of(context).textTheme.headline5,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    for (var entry in _parsed!.entries)
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: BorderedAll(
-                          child: Padding(
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height - TOP_BAR_HEIGHT,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      maxLines: 2,
+                      decoration: const InputDecoration(
+                        label: Text("JWT Token"),
+                      ),
+                      controller: _controller,
+                    ),
+                  ),
+                  Text(
+                    "Decoded payload",
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        for (var entry in _parsed!.entries)
+                          Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                SelectableText(
-                                  entry.key,
-                                  style: Theme.of(context).textTheme.headline6,
+                            child: BorderedAll(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    SelectableText(
+                                      entry.key,
+                                      style: Theme.of(context).textTheme.headline6,
+                                    ),
+                                    Text(
+                                      ": ",
+                                      style: Theme.of(context).textTheme.headline6,
+                                    ),
+                                    SelectableText(
+                                      entry.value.toString(),
+                                      style: Theme.of(context).textTheme.headline6,
+                                    ),
+                                  ],
                                 ),
-                                Text(
-                                  ": ",
-                                  style: Theme.of(context).textTheme.headline6,
-                                ),
-                                SelectableText(
-                                  entry.value.toString(),
-                                  style: Theme.of(context).textTheme.headline6,
-                                ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                  ],
-                ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         if (errorString != null)
           Expanded(

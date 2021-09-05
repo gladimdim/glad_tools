@@ -5,6 +5,8 @@ import 'package:glad_tools/models/json_beautify/json_beautify.dart';
 import 'package:glad_tools/models/jwt/jwt_parser.dart';
 import 'package:glad_tools/models/url_parser/url_parser.dart';
 
+const TOP_BAR_HEIGHT = 100.0;
+
 class MainView extends StatefulWidget {
   const MainView({Key? key}) : super(key: key);
 

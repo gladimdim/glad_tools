@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:glad_tools/models/base64_image/base64_image.dart';
 import 'package:glad_tools/models/base_class.dart';
 import 'package:glad_tools/models/json_beautify/json_beautify.dart';
+import 'package:glad_tools/models/jwt/jwt_parser.dart';
 import 'package:glad_tools/models/url_parser/url_parser.dart';
 
 class MainView extends StatefulWidget {
@@ -16,6 +17,7 @@ class _MainViewState extends State<MainView> {
     Base64Image(),
     JsonBeautify(),
     UrlParser(),
+    JwtParser(),
   ];
 
   late ToolObject selected = actions[0];

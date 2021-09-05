@@ -7,6 +7,7 @@ import 'package:glad_tools/models/base_class.dart';
 
 class JsonBeautify extends ToolObject {
   static dynamic rootObject;
+
   JsonBeautify()
       : super(
           title: "JSON Beautify",
@@ -35,7 +36,6 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
       _format();
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -148,8 +148,6 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
         reportError(e);
         return;
       }
-
-
 
       _controller.text = formatString(map, 0);
     });

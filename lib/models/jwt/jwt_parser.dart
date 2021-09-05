@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:glad_tools/components/ui/bordered_all.dart';
 import 'package:glad_tools/models/base_class.dart';
+import 'package:glad_tools/utils/duration.dart';
 import 'package:glad_tools/views/main_view.dart';
 
 class JwtParser extends ToolObject {
@@ -27,6 +28,7 @@ class JwtParserContent extends StatefulWidget {
 class _Base64ImageContentState extends State<JwtParserContent> {
   final TextEditingController _controller = TextEditingController();
   Map? _parsed;
+  DateTime? _expirationDate;
   String? errorString;
 
   @override
@@ -47,30 +49,46 @@ class _Base64ImageContentState extends State<JwtParserContent> {
             IconButton(onPressed: _paste, icon: const Icon(Icons.paste)),
           ],
         ),
-
-        if (_parsed != null)
-          ConstrainedBox(
-            constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height - TOP_BAR_HEIGHT,
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
+        ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height - TOP_BAR_HEIGHT,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    maxLines: 2,
+                    decoration: const InputDecoration(
+                      label: Text("JWT Token"),
+                    ),
+                    controller: _controller,
+                  ),
+                ),
+                if (_expirationDate != null)
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      maxLines: 2,
-                      decoration: const InputDecoration(
-                        label: Text("JWT Token"),
-                      ),
-                      controller: _controller,
+                    child: Column(
+                      children: [
+                        Text(
+                          _expirationDate!.isBefore(DateTime.now())
+                              ? "Expired on: ${formatDateTime(_expirationDate!)}"
+                              : "Expires on: ${formatDateTime(_expirationDate!)} in ${formatDuration(_expirationDate!.difference(DateTime.now()))}",
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline6!
+                              .copyWith(
+                                color: _expirationDate!.isBefore(DateTime.now())
+                                    ? Colors.red
+                                    : Colors.green,
+                              ),
+                        ),
+                      ],
                     ),
                   ),
-                  Text(
-                    "Decoded payload",
-                    style: Theme.of(context).textTheme.headline5,
-                  ),
+                if (_parsed != null)
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
@@ -85,15 +103,18 @@ class _Base64ImageContentState extends State<JwtParserContent> {
                                   children: [
                                     SelectableText(
                                       entry.key,
-                                      style: Theme.of(context).textTheme.headline6,
+                                      style:
+                                          Theme.of(context).textTheme.headline6,
                                     ),
                                     Text(
                                       ": ",
-                                      style: Theme.of(context).textTheme.headline6,
+                                      style:
+                                          Theme.of(context).textTheme.headline6,
                                     ),
                                     SelectableText(
                                       entry.value.toString(),
-                                      style: Theme.of(context).textTheme.headline6,
+                                      style:
+                                          Theme.of(context).textTheme.headline6,
                                     ),
                                   ],
                                 ),
@@ -103,10 +124,10 @@ class _Base64ImageContentState extends State<JwtParserContent> {
                       ],
                     ),
                   ),
-                ],
-              ),
+              ],
             ),
           ),
+        ),
         if (errorString != null)
           Expanded(
             flex: 1,
@@ -127,6 +148,7 @@ class _Base64ImageContentState extends State<JwtParserContent> {
       _parsed = null;
       errorString = null;
       _controller.text = "";
+      _expirationDate = null;
     });
   }
 
@@ -169,12 +191,24 @@ class _Base64ImageContentState extends State<JwtParserContent> {
     final decodedString = utf8.decode(base64Decode(payloadString));
     setState(() {
       _parsed = jsonDecode(decodedString);
+      updateExpirationDate(_parsed!);
     });
+  }
+
+  void updateExpirationDate(Map json) {
+    final exp = json["exp"];
+    if (exp == null) {
+      _expirationDate = null;
+    } else {
+      _expirationDate = DateTime.parse(exp);
+    }
+    setState(() {});
   }
 
   void updateWithError(String error) {
     setState(() {
       _parsed = null;
+      _expirationDate = null;
       errorString = error;
     });
   }

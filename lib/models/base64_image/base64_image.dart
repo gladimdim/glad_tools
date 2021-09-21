@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:glad_tools/components/ui/bordered_all.dart';
-import 'package:glad_tools/models/base_class.dart';
+import 'package:glad_tools/models/tool_object.dart';
 
 class Base64Image extends ToolObject {
 

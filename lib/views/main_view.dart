@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:glad_tools/models/base64_image/base64_image.dart';
-import 'package:glad_tools/models/base_class.dart';
+import 'package:glad_tools/models/tool_object.dart';
 import 'package:glad_tools/models/json_beautify/json_beautify.dart';
 import 'package:glad_tools/models/jwt/jwt_parser.dart';
+import 'package:glad_tools/models/url_inspector/url_inspector.dart';
 import 'package:glad_tools/models/url_parser/url_parser.dart';
 
 const TOP_BAR_HEIGHT = 100.0;
@@ -20,6 +21,7 @@ class _MainViewState extends State<MainView> {
     JsonBeautify(),
     UrlParser(),
     JwtParser(),
+    UrlInspector(),
   ];
 
   late ToolObject selected = actions[0];

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:glad_tools/models/tool_object.dart';
+import 'package:glad_tools/models/url_inspector/body_view.dart';
 import 'package:glad_tools/models/url_inspector/headers_view.dart';
 import 'package:glad_tools/models/url_inspector/status_view.dart';
 import 'package:glad_tools/views/main_view.dart';
@@ -78,19 +79,21 @@ class _UrlInspectorState extends State<UrlInspectorView> {
                 if (response != null) ...[
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: StatusView(response: response!),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: HeadersView(response: response!),
-                          ),
-                        ],
-                      ),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: StatusView(response: response!),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: HeadersView(response: response!),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: BodyView(response: response!),
+                        ),
+                      ],
                     ),
                   ),
                 ],

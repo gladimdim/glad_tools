@@ -11,30 +11,40 @@ class HeadersView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BorderedAll(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text("Headers", style: Theme.of(context).textTheme.headline6,),
-            ...response.headers.entries
-                .map(
-                  (e) => BorderedBottom(
-                    child: Row(
-                      children: [
-                        SelectableText("${e.key}: ",
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green)),
-                        SelectableText(e.value),
-                      ],
-                    ),
-                  ),
-                )
-                .toList()
-          ],
+      child: ExpansionTile(
+        title: Text(
+          "Headers",
+          style: Theme.of(context).textTheme.headline6,
         ),
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ...response.headers.entries
+                    .map(
+                      (e) => BorderedBottom(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              SelectableText("${e.key}: ",
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.green)),
+                              SelectableText(e.value),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                    .toList()
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

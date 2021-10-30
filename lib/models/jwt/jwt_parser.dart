@@ -111,10 +111,12 @@ class _Base64ImageContentState extends State<JwtParserContent> {
                                       style:
                                           Theme.of(context).textTheme.headline6,
                                     ),
-                                    SelectableText(
-                                      entry.value.toString(),
-                                      style:
-                                          Theme.of(context).textTheme.headline6,
+                                    Expanded(
+                                      child: SelectableText(
+                                        entry.value.toString(),
+                                        style:
+                                            Theme.of(context).textTheme.headline6,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -197,10 +199,18 @@ class _Base64ImageContentState extends State<JwtParserContent> {
 
   void updateExpirationDate(Map json) {
     final exp = json["exp"];
+
     if (exp == null) {
       _expirationDate = null;
     } else {
-      _expirationDate = DateTime.parse(exp);
+      try {
+        // do a dummy check for Integer value. If it is a string it will throw
+        print(exp + 1);
+        _expirationDate = DateTime.fromMillisecondsSinceEpoch(exp * 1000);
+      } catch (e) {
+        // then its a string
+        _expirationDate = DateTime.parse(exp);
+      }
     }
     setState(() {});
   }

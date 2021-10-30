@@ -11,7 +11,7 @@ This is the toolbox that can be helpful for devs to make every day tasks such as
 - [?] Image to Base 64
 - [x] Url elements visualiser
 - [x] Url Encoder/Decoder (URL percent-based encoding)
-- JWT parser
+- [x] JWT parser
 
 Works on:
 

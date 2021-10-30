@@ -8,6 +8,7 @@ import 'package:glad_tools/utils/duration.dart';
 import 'package:glad_tools/views/main_view.dart';
 
 class JwtParser extends ToolObject {
+  static dynamic rootObject;
   JwtParser()
       : super(
           title: "JWT Parser",
@@ -30,6 +31,15 @@ class _Base64ImageContentState extends State<JwtParserContent> {
   Map? _parsed;
   DateTime? _expirationDate;
   String? errorString;
+
+  @override
+  void initState() {
+    super.initState();
+    if (JwtParser.rootObject != null) {
+      _controller.text = JwtParser.rootObject as String;
+      _parse();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -169,6 +179,7 @@ class _Base64ImageContentState extends State<JwtParserContent> {
 
   void _parse() {
     errorString = null;
+    JwtParser.rootObject = _controller.text;
     if (_controller.text == "") {
       return;
     }

@@ -23,7 +23,7 @@ Works on:
 
 [Windows 10 Build](https://github.com/gladimdim/glad_tools/files/7110106/glad_tools_windows.zip).
 
- [Download VC++ Redistributable](https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0) pacakage before launching. (I guess you already have it installed).
+ [Download VC++ Redistributable](https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0) package before launching. (I guess you already have it installed).
 
 # Why
 

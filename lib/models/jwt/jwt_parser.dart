@@ -9,6 +9,7 @@ import 'package:glad_tools/views/main_view.dart';
 
 class JwtParser extends ToolObject {
   static dynamic rootObject;
+
   JwtParser()
       : super(
           title: "JWT Parser",
@@ -124,8 +125,9 @@ class _Base64ImageContentState extends State<JwtParserContent> {
                                     Expanded(
                                       child: SelectableText(
                                         entry.value.toString(),
-                                        style:
-                                            Theme.of(context).textTheme.headline6,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6,
                                       ),
                                     ),
                                   ],
@@ -210,20 +212,15 @@ class _Base64ImageContentState extends State<JwtParserContent> {
 
   void updateExpirationDate(Map json) {
     final exp = json["exp"];
-    int? possibleInteger;
 
     if (exp == null) {
       _expirationDate = null;
-    } else {
-      try {
-        // do a dummy check for Integer value. If it is a string it will throw
-        possibleInteger = exp + 1;
-        _expirationDate = DateTime.fromMillisecondsSinceEpoch((possibleInteger! - 1) * 1000);
-      } catch (e) {
-        // then its a string
-        _expirationDate = DateTime.parse(exp);
-      }
+    } else if (exp is int) {
+      _expirationDate = DateTime.fromMillisecondsSinceEpoch(exp * 1000);
+    } else if (exp is String) {
+      _expirationDate = DateTime.parse(exp);
     }
+
     setState(() {});
   }
 

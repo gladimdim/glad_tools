@@ -193,6 +193,8 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
         }
       }
       inner += "}";
+    } else if (input == null) {
+      inner += "null";
     }
 
     return inner;
@@ -239,6 +241,8 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
         }
       }
       inner += addSpaces(base + _whitespaceAmount) + "}";
+    } else if (input == null) {
+      inner += "null";
     }
 
     return inner;

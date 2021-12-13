@@ -100,7 +100,7 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
                     padding: const EdgeInsets.all(8.0),
                     child: Center(
                       child: Text(
-                          "An error has occurred while converting to image: $errorString"),
+                          errorString!),
                     ),
                   ),
                 ),
@@ -144,18 +144,24 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
     }
 
     var parser = JsonParserIsolate(_controller.text);
-    dynamic map = await parser.parseJson(onError: reportError);
-
-    setState(() {
-      _controller.text = formatString(map, _whitespaceAmount);
-    });
+    try {
+      dynamic map = await parser.parseJson();
+      setState(() {
+        _controller.text = formatString(map, _whitespaceAmount);
+      });
+    } catch (e) {
+      reportError(e);
+    }
   }
 
   void _minify() async {
     var parser = JsonParserIsolate(_controller.text);
-    dynamic input = await parser.parseJson(onError: reportError);
-
-    _controller.text = _minifyString(input);
+    try {
+      dynamic input = await parser.parseJson();
+      _controller.text = _minifyString(input);
+    } catch (e) {
+      reportError(e);
+    }
   }
 
   String _minifyString(input) {

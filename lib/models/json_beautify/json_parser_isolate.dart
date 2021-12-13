@@ -7,20 +7,18 @@ class JsonParserIsolate {
 
   JsonParserIsolate(this.input);
 
-  Future parseJson({Function(String)? onError}) async {
+  Future parseJson() async {
     final completer = Completer();
     var port = ReceivePort();
     var errorPort = ReceivePort();
     await Isolate.spawn(_parse, port.sendPort, onError: errorPort.sendPort);
 
     errorPort.listen((message) {
-      if (onError != null) {
         // first is Error Message
         // second is stacktrace which is not needed
         List errors = message as List;
         errorPort.close();
-        onError(errors.first);
-      }
+        completer.completeError(errors.first);
     });
 
     port.listen((message) {

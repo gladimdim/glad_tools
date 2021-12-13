@@ -142,14 +142,9 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
     if (_controller.text.isEmpty) {
       return;
     }
-    dynamic map;
-    try {
-      var parser = JsonParserIsolate(_controller.text);
-      map = await parser.parseJson();
-    } catch (e) {
-      reportError(e);
-      return;
-    }
+
+    var parser = JsonParserIsolate(_controller.text);
+    dynamic map = await parser.parseJson(onError: reportError);
 
     setState(() {
       _controller.text = formatString(map, _whitespaceAmount);
@@ -157,14 +152,8 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
   }
 
   void _minify() async {
-    dynamic input;
-    try {
-      var parser = JsonParserIsolate(_controller.text);
-      input = await parser.parseJson();
-    } catch (e) {
-      reportError(e);
-      return;
-    }
+    var parser = JsonParserIsolate(_controller.text);
+    dynamic input = await parser.parseJson(onError: reportError);
 
     _controller.text = _minifyString(input);
   }

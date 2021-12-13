@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:isolate';
 
@@ -6,10 +7,28 @@ class JsonParserIsolate {
 
   JsonParserIsolate(this.input);
 
-  Future parseJson() async {
+  Future parseJson({Function(String)? onError}) async {
+    final completer = Completer();
     var port = ReceivePort();
-    await Isolate.spawn(_parse, port.sendPort);
-    return await port.first;
+    var errorPort = ReceivePort();
+    await Isolate.spawn(_parse, port.sendPort, onError: errorPort.sendPort);
+
+    errorPort.listen((message) {
+      if (onError != null) {
+        // first is Error Message
+        // second is stacktrace which is not needed
+        List errors = message as List;
+        errorPort.close();
+        onError(errors.first);
+      }
+    });
+
+    port.listen((message) {
+      port.close();
+      completer.complete(message);
+    });
+
+    return completer.future;
   }
 
   Future<void> _parse(SendPort p) async {

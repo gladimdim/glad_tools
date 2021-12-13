@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:glad_tools/components/ui/bordered_all.dart';
+import 'package:glad_tools/models/json_beautify/json_parser_isolate.dart';
 import 'package:glad_tools/models/tool_object.dart';
 
 class JsonBeautify extends ToolObject {
@@ -99,7 +100,7 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
                     padding: const EdgeInsets.all(8.0),
                     child: Center(
                       child: Text(
-                          "An error has occurred while converting to image: $errorString"),
+                          errorString!),
                     ),
                   ),
                 ),
@@ -134,35 +135,33 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
     Clipboard.setData(ClipboardData(text: _controller.text));
   }
 
-  void _format() {
+  void _format() async {
     JsonBeautify.rootObject = _controller.text;
-    setState(() {
-      errorString = null;
-      if (_controller.text.isEmpty) {
-        return;
-      }
-      dynamic map;
-      try {
-        map = jsonDecode(_controller.text);
-      } catch (e) {
-        reportError(e);
-        return;
-      }
 
-      _controller.text = formatString(map, 0);
-    });
-  }
-
-  void _minify() {
-    dynamic input;
-    try {
-      input = jsonDecode(_controller.text);
-    } catch (e) {
-      reportError(e);
+    errorString = null;
+    if (_controller.text.isEmpty) {
       return;
     }
 
-    _controller.text = _minifyString(input);
+    var parser = JsonParserIsolate(_controller.text);
+    try {
+      dynamic map = await parser.parseJson();
+      setState(() {
+        _controller.text = formatString(map, _whitespaceAmount);
+      });
+    } catch (e) {
+      reportError(e);
+    }
+  }
+
+  void _minify() async {
+    var parser = JsonParserIsolate(_controller.text);
+    try {
+      dynamic input = await parser.parseJson();
+      _controller.text = _minifyString(input);
+    } catch (e) {
+      reportError(e);
+    }
   }
 
   String _minifyString(input) {
@@ -201,51 +200,13 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
   }
 
   String formatString(input, int base) {
-    var inner = "";
-    if (input is List) {
-      inner += "[\n";
-      for (var element in input) {
-        inner +=
-            addSpaces(base) + formatString(element, base + _whitespaceAmount);
-        if (input.last != element) {
-          inner += ",\n";
-        } else {
-          inner += "\n";
-        }
-      }
-      inner += addSpaces(base + _whitespaceAmount) + "]";
-    } else if (input is bool) {
-      inner = addSpaces(base) + input.toString();
-    } else if (input is String) {
-      inner = addSpaces(base) + "\"$input\"";
-    } else if (input is num) {
-      inner += addSpaces(base) + input.toString();
-    } else if (input is Map) {
-      inner =
-          (base == 0 ? "" : "\n") + addSpaces(base + _whitespaceAmount) + "{\n";
-      for (var entry in input.entries) {
-        inner += addSpaces(base + _whitespaceAmount) + "\"${entry.key}\": ";
-        var nextBase = base;
-        if (entry.value is bool ||
-            entry.value is String ||
-            entry.value is num) {
-          nextBase = 1;
-        } else {
-          nextBase = base + _whitespaceAmount;
-        }
-        inner += formatString(entry.value, nextBase);
-        if (input.entries.last.key != entry.key) {
-          inner += ",\n";
-        } else {
-          inner += "\n";
-        }
-      }
-      inner += addSpaces(base + _whitespaceAmount) + "}";
-    } else if (input == null) {
-      inner += "null";
+    var indent = "";
+    while (base >= 0) {
+      base--;
+      indent += " ";
     }
-
-    return inner;
+    var string = JsonEncoder.withIndent(indent);
+    return string.convert(input);
   }
 
   String addSpaces(int amount) {

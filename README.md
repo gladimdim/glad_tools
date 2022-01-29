@@ -73,9 +73,9 @@ flutter run -d macOS
 
 ### JWT Token parser
 
-[!JWT Token](images/jwt_token.png)
+![JWT Token](images/jwt_token.png)
 
 ### URL Inspector
 
-[!URL Inspector 1](images/url_inspector_1.png)
-[!URL Inspector 2](images/url_inspector_2png)
+![URL Inspector 1](images/url_inspector_1.png)
+![URL Inspector 2](images/url_inspector_2png)

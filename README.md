@@ -78,4 +78,4 @@ flutter run -d macOS
 ### URL Inspector
 
 ![URL Inspector 1](images/url_inspector_1.png)
-![URL Inspector 2](images/url_inspector_2png)
+![URL Inspector 2](images/url_inspector_2.png)

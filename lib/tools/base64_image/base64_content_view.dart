@@ -1,21 +1,9 @@
-import 'dart:convert';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:glad_tools/components/ui/bordered_all.dart';
-import 'package:glad_tools/models/tool_object.dart';
-
-class Base64Image extends ToolObject {
-
-  static dynamic rootObject;
-  Base64Image()
-      : super(
-          title: "Base64 Image Decoder",
-          icon: const Icon(Icons.image),
-          contentBuilder: (context) => const Base64ImageContent(),
-        );
-}
+import 'package:glad_tools/tools/base64_image/base64_image.dart';
+import 'dart:convert';
+import 'dart:typed_data';
 
 class Base64ImageContent extends StatefulWidget {
   const Base64ImageContent({
@@ -36,7 +24,7 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
     super.initState();
     if (Base64Image.rootObject != null) {
       _base64 = Base64Image.rootObject as String;
-      _format();
+      _decode();
     }
   }
 
@@ -47,7 +35,7 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
         Row(
           children: [
             TextButton(
-              onPressed: _format,
+              onPressed: _decode,
               child: const Text("Decode"),
             ),
             TextButton(
@@ -128,28 +116,22 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
 
       Base64Image.rootObject = _base64;
     }
-    _format();
+    _decode();
   }
 
   void _copy() {
     Clipboard.setData(ClipboardData(text: _base64));
   }
 
-  void _format() {
+  void _decode() {
     errorString = null;
     var sImage = _base64;
     if (sImage == null) {
       return;
     }
-    final containsMeta = sImage.contains("data:image");
-    if (containsMeta) {
-      sImage = sImage.split(",")[1];
-    }
+
     try {
-      Uint8List bytes = base64Decode(sImage);
-      _image = Image.memory(
-        bytes,
-      );
+      _image = Base64Image.stringToImage(sImage);
     } catch (e) {
       errorString = e.toString();
     }

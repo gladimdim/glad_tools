@@ -1,8 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:glad_tools/models/tool_object.dart';
-import 'package:glad_tools/models/url_parser/query_list.dart';
+import 'package:glad_tools/tools/tool_object.dart';
+import 'package:glad_tools/tools/url_parser/query_list.dart';
 import 'package:glad_tools/views/main_view.dart';
 
 class UrlParser extends ToolObject {

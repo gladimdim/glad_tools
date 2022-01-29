@@ -70,3 +70,12 @@ flutter run -d macOS
 
 ### Minify:
 ![Minify](images/json_minify.png)
+
+### JWT Token parser
+
+[!JWT Token](images/jwt_token.png)
+
+### URL Inspector
+
+[!URL Inspector 1](images/url_inspector_1.png)
+[!URL Inspector 2](images/url_inspector_2png)

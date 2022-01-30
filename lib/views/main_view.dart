@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glad_tools/tools/base64_image/base64_image.dart';
-import 'package:glad_tools/tools/json_beautify/json_beautify.dart';
+import 'package:glad_tools/tools/json_beautify/json_tools.dart';
 import 'package:glad_tools/tools/tool_object.dart';
 import 'package:glad_tools/tools/jwt/jwt_parser.dart';
 import 'package:glad_tools/tools/url_inspector/url_inspector.dart';
@@ -18,7 +18,7 @@ class MainView extends StatefulWidget {
 class _MainViewState extends State<MainView> {
   final List<ToolObject> actions = [
     Base64Image(),
-    JsonBeautify(),
+    JsonTools(),
     UrlParser(),
     JwtParser(),
     UrlInspector(),

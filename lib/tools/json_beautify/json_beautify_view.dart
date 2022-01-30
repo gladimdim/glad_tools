@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:glad_tools/components/ui/bordered_all.dart';
-import 'package:glad_tools/tools/json_beautify/json_beautify.dart';
+import 'package:glad_tools/tools/json_beautify/json_tools.dart';
 import 'package:glad_tools/tools/json_beautify/json_parser_isolate.dart';
+import 'package:glad_tools/utils/clipboard_manager.dart';
 
 class JsonBeautifyView extends StatefulWidget {
   const JsonBeautifyView({Key? key}) : super(key: key);
@@ -19,8 +20,8 @@ class _JsonBeautifyViewState extends State<JsonBeautifyView> {
   @override
   void initState() {
     super.initState();
-    if (JsonBeautify.rootObject != null) {
-      _controller.text = JsonBeautify.rootObject as String;
+    if (JsonTools.rootObject != null) {
+      _controller.text = JsonTools.rootObject as String;
       _format();
     }
   }
@@ -86,8 +87,7 @@ class _JsonBeautifyViewState extends State<JsonBeautifyView> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Center(
-                      child: Text(
-                          errorString!),
+                      child: Text(errorString!),
                     ),
                   ),
                 ),
@@ -107,33 +107,31 @@ class _JsonBeautifyViewState extends State<JsonBeautifyView> {
         ),
       );
       errorString = null;
-      JsonBeautify.rootObject = null;
+      JsonTools.rootObject = null;
     });
   }
 
   void _paste() async {
-    final data = await Clipboard.getData(Clipboard.kTextPlain);
-    if (data != null && data.text != null) {
-      _controller.text = data.text!;
-    }
+    final text = await ClipboardManager.paste();
+    _controller.text = text ?? "";
     _format();
   }
 
   void _copy() {
-    Clipboard.setData(ClipboardData(text: _controller.text));
+    ClipboardManager.copy(_controller.text);
   }
 
   void _format() async {
-    JsonBeautify.rootObject = _controller.text;
+    JsonTools.rootObject = _controller.text;
 
     errorString = null;
     if (_controller.text.isEmpty) {
       return;
     }
 
-
     try {
-      final result = await JsonBeautify.stringToBeautifyString(_controller.text, withIndent: _whitespaceAmount);
+      final result = await JsonTools.stringToBeautifyString(_controller.text,
+          withIndent: _whitespaceAmount);
       setState(() {
         _controller.text = result;
       });
@@ -143,48 +141,14 @@ class _JsonBeautifyViewState extends State<JsonBeautifyView> {
   }
 
   void _minify() async {
-    var parser = JsonParserIsolate(_controller.text);
     try {
-      dynamic input = await parser.parseJson();
-      _controller.text = _minifyString(input);
+      final minified = await JsonTools.minify(_controller.text);
+      setState(() {
+        _controller.text = minified;
+      });
     } catch (e) {
       reportError(e);
     }
-  }
-
-  String _minifyString(input) {
-    var inner = "";
-    if (input is num) {
-      inner = input.toString();
-    } else if (input is String) {
-      inner = "\"${input.toString()}\"";
-    } else if (input is bool) {
-      inner = input.toString();
-    } else if (input is List) {
-      inner = "[";
-      for (var element in input) {
-        inner += _minifyString(element);
-        if (input.last != element) {
-          inner += ",";
-        }
-      }
-      inner += "]";
-    } else if (input is Map) {
-      inner = "{";
-      for (var entry in input.entries) {
-        inner += "\"${entry.key}\":";
-
-        inner += _minifyString(entry.value);
-        if (input.entries.last.key != entry.key) {
-          inner += ",";
-        }
-      }
-      inner += "}";
-    } else if (input == null) {
-      inner += "null";
-    }
-
-    return inner;
   }
 
   void reportError(Object e) {

@@ -18,10 +18,10 @@ class JsonTools extends ToolObject {
       {int withIndent = 4}) async {
     var parser = JsonParserIsolate(text);
     dynamic map = await parser.parseJson();
-    return formatString(map, withIndent);
+    return formatMapToString(map, withIndent);
   }
 
-  static String formatString(Map<String, dynamic> map, int indent) {
+  static String formatMapToString(Map<String, dynamic> map, int indent) {
     var spaces = "";
     while (indent >= 0) {
       indent--;
@@ -37,7 +37,7 @@ class JsonTools extends ToolObject {
     return minifyString(map);
   }
 
-  static String minifyString(input) {
+  static String minifyString(Object? input) {
     var inner = "";
     if (input is num) {
       inner = input.toString();

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:glad_tools/components/ui/bordered_all.dart';
 import 'package:glad_tools/tools/base64_image/base64_image.dart';
+import 'package:glad_tools/utils/clipboard_manager.dart';
 
 class Base64ImageContent extends StatefulWidget {
   const Base64ImageContent({
@@ -109,17 +110,18 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
   }
 
   void _paste() async {
-    final data = await Clipboard.getData(Clipboard.kTextPlain);
-    if (data != null && data.text != null) {
-      _base64 = data.text!;
+    final text = await ClipboardManager.paste();
+    _base64 = text ?? "";
 
-      Base64Image.rootObject = _base64;
-    }
+    // save to restore
+    Base64Image.rootObject = _base64;
     _decode();
   }
 
   void _copy() {
-    Clipboard.setData(ClipboardData(text: _base64));
+    if (_base64 != null) {
+      ClipboardManager.copy(_base64!);
+    }
   }
 
   void _decode() {

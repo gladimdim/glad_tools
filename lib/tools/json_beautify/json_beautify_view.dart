@@ -114,6 +114,7 @@ class _JsonBeautifyViewState extends State<JsonBeautifyView> {
   void _paste() async {
     final text = await ClipboardManager.paste();
     _controller.text = text ?? "";
+    JsonTools.rootObject = text;
     _format();
   }
 

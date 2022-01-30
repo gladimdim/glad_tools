@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:glad_tools/models/tool_object.dart';
-import 'package:glad_tools/models/url_inspector/body_view.dart';
-import 'package:glad_tools/models/url_inspector/headers_view.dart';
-import 'package:glad_tools/models/url_inspector/status_view.dart';
+import 'package:glad_tools/tools/tool_object.dart';
+import 'package:glad_tools/tools/url_inspector/body_view.dart';
+import 'package:glad_tools/tools/url_inspector/headers_view.dart';
+import 'package:glad_tools/tools/url_inspector/status_view.dart';
 import 'package:glad_tools/views/main_view.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';

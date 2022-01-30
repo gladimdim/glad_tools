@@ -1,30 +1,18 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:glad_tools/components/ui/bordered_all.dart';
-import 'package:glad_tools/models/json_beautify/json_parser_isolate.dart';
-import 'package:glad_tools/models/tool_object.dart';
+import 'package:glad_tools/tools/json_beautify/json_tools.dart';
+import 'package:glad_tools/tools/json_beautify/json_parser_isolate.dart';
+import 'package:glad_tools/utils/clipboard_manager.dart';
 
-class JsonBeautify extends ToolObject {
-  static dynamic rootObject;
-
-  JsonBeautify()
-      : super(
-          title: "JSON Beautify",
-          icon: const Icon(Icons.format_align_justify),
-          contentBuilder: (context) => const JsonBeautifier(),
-        );
-}
-
-class JsonBeautifier extends StatefulWidget {
-  const JsonBeautifier({Key? key}) : super(key: key);
+class JsonBeautifyView extends StatefulWidget {
+  const JsonBeautifyView({Key? key}) : super(key: key);
 
   @override
-  _JsonBeautifierState createState() => _JsonBeautifierState();
+  _JsonBeautifyViewState createState() => _JsonBeautifyViewState();
 }
 
-class _JsonBeautifierState extends State<JsonBeautifier> {
+class _JsonBeautifyViewState extends State<JsonBeautifyView> {
   final TextEditingController _controller = TextEditingController();
   String? errorString;
   int _whitespaceAmount = 2;
@@ -32,8 +20,8 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
   @override
   void initState() {
     super.initState();
-    if (JsonBeautify.rootObject != null) {
-      _controller.text = JsonBeautify.rootObject as String;
+    if (JsonTools.rootObject != null) {
+      _controller.text = JsonTools.rootObject as String;
       _format();
     }
   }
@@ -99,8 +87,7 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Center(
-                      child: Text(
-                          errorString!),
+                      child: Text(errorString!),
                     ),
                   ),
                 ),
@@ -112,42 +99,42 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
   }
 
   void _clear() {
-    _controller.value = TextEditingValue(
-      text: "",
-      selection: TextSelection.fromPosition(
-        const TextPosition(offset: 0),
-      ),
-    );
-    errorString = null;
-    JsonBeautify.rootObject = null;
-    setState(() {});
+    setState(() {
+      _controller.value = TextEditingValue(
+        text: "",
+        selection: TextSelection.fromPosition(
+          const TextPosition(offset: 0),
+        ),
+      );
+      errorString = null;
+      JsonTools.rootObject = null;
+    });
   }
 
   void _paste() async {
-    final data = await Clipboard.getData(Clipboard.kTextPlain);
-    if (data != null && data.text != null) {
-      _controller.text = data.text!;
-    }
+    final text = await ClipboardManager.paste();
+    _controller.text = text ?? "";
+    JsonTools.rootObject = text;
     _format();
   }
 
   void _copy() {
-    Clipboard.setData(ClipboardData(text: _controller.text));
+    ClipboardManager.copy(_controller.text);
   }
 
   void _format() async {
-    JsonBeautify.rootObject = _controller.text;
+    JsonTools.rootObject = _controller.text;
 
     errorString = null;
     if (_controller.text.isEmpty) {
       return;
     }
 
-    var parser = JsonParserIsolate(_controller.text);
     try {
-      dynamic map = await parser.parseJson();
+      final result = await JsonTools.stringToBeautifyString(_controller.text,
+          withIndent: _whitespaceAmount);
       setState(() {
-        _controller.text = formatString(map, _whitespaceAmount);
+        _controller.text = result;
       });
     } catch (e) {
       reportError(e);
@@ -155,66 +142,14 @@ class _JsonBeautifierState extends State<JsonBeautifier> {
   }
 
   void _minify() async {
-    var parser = JsonParserIsolate(_controller.text);
     try {
-      dynamic input = await parser.parseJson();
-      _controller.text = _minifyString(input);
+      final minified = await JsonTools.minify(_controller.text);
+      setState(() {
+        _controller.text = minified;
+      });
     } catch (e) {
       reportError(e);
     }
-  }
-
-  String _minifyString(input) {
-    var inner = "";
-    if (input is num) {
-      inner = input.toString();
-    } else if (input is String) {
-      inner = "\"${input.toString()}\"";
-    } else if (input is bool) {
-      inner = input.toString();
-    } else if (input is List) {
-      inner = "[";
-      for (var element in input) {
-        inner += _minifyString(element);
-        if (input.last != element) {
-          inner += ",";
-        }
-      }
-      inner += "]";
-    } else if (input is Map) {
-      inner = "{";
-      for (var entry in input.entries) {
-        inner += "\"${entry.key}\":";
-
-        inner += _minifyString(entry.value);
-        if (input.entries.last.key != entry.key) {
-          inner += ",";
-        }
-      }
-      inner += "}";
-    } else if (input == null) {
-      inner += "null";
-    }
-
-    return inner;
-  }
-
-  String formatString(input, int base) {
-    var indent = "";
-    while (base >= 0) {
-      base--;
-      indent += " ";
-    }
-    var string = JsonEncoder.withIndent(indent);
-    return string.convert(input);
-  }
-
-  String addSpaces(int amount) {
-    var result = "";
-    for (var i = 0; i < amount; i++) {
-      result += " ";
-    }
-    return result;
   }
 
   void reportError(Object e) {

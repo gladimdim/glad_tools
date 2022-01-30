@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:glad_tools/components/ui/bordered_all.dart';
-import 'package:glad_tools/components/ui/bordered_bottom.dart';
 import 'package:http/http.dart';
 
 class BodyView extends StatelessWidget {

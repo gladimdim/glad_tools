@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:glad_tools/components/ui/bordered_all.dart';
 import 'package:glad_tools/tools/base64_image/base64_image.dart';
-import 'dart:convert';
-import 'dart:typed_data';
 
 class Base64ImageContent extends StatefulWidget {
   const Base64ImageContent({
@@ -50,7 +48,8 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const Text("Decode result. Black border is not a part of your image."),
+              const Text(
+                  "Decode result. Black border is not a part of your image."),
               SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height - 115,

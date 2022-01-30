@@ -6,9 +6,9 @@ name: Flutter Test Runner
 # events but only for the master branch
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -20,12 +20,12 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v1
       # Flutter builder
-      - uses: actions/setup-java@v2
+      - uses: actions/setup-java@v1
         with:
           java-version: '12.x'
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@v1
         with:
           channel: 'master' # or: 'dev' or 'beta'
       - run: flutter pub get

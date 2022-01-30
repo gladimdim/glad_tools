@@ -16,5 +16,12 @@ void main() {
       const expected = """{\n     \"test\": 3,\n     \"array\": [\n          1,\n          2,\n          3\n     ]\n}""";
       expect(result, equals(expected), reason: "Map was minified into string with indent 4");
     });
+
+    test("Can parse string into JSON and then minify it", () async {
+      const input = """{"object":   null,   "array":   [1, \n2, {  "anotherObject": true}]}""";
+      final result = await JsonTools.minifyString(input);
+      const expected = """{"object":null,"array":[1,2,{"anotherObject":true}]}""";
+      expect(result, expected, reason: "String was minified");
+    });
   });
 }

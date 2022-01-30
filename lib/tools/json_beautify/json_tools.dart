@@ -31,13 +31,13 @@ class JsonTools extends ToolObject {
     return string.convert(map);
   }
 
-  static Future<String> minify(String text) async {
+  static Future<String> minifyString(String text) async {
     var parser = JsonParserIsolate(text);
     Map<String, dynamic> map = await parser.parseJson();
-    return minifyString(map);
+    return _minifyString(map);
   }
 
-  static String minifyString(Object? input) {
+  static String _minifyString(Object? input) {
     var inner = "";
     if (input is num) {
       inner = input.toString();
@@ -48,7 +48,7 @@ class JsonTools extends ToolObject {
     } else if (input is List) {
       inner = "[";
       for (var element in input) {
-        inner += minifyString(element);
+        inner += _minifyString(element);
         if (input.last != element) {
           inner += ",";
         }
@@ -59,7 +59,7 @@ class JsonTools extends ToolObject {
       for (var entry in input.entries) {
         inner += "\"${entry.key}\":";
 
-        inner += minifyString(entry.value);
+        inner += _minifyString(entry.value);
         if (input.entries.last.key != entry.key) {
           inner += ",";
         }

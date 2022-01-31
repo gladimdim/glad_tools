@@ -1,30 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:glad_tools/components/ui/bordered_all.dart';
 import 'package:glad_tools/tools/base64_image/base64_image_tool.dart';
-import 'package:glad_tools/tools/model/tool_object.dart';
 import 'package:glad_tools/utils/clipboard_manager.dart';
 import 'package:glad_tools/views/tool_widget_state.dart';
 
-class Base64ImageContent extends StatefulWidget {
-  final ToolObject tool;
-  const Base64ImageContent({
+class Base64ImageDecoderView extends ToolWidget<Base64ImageTool> {
+  const Base64ImageDecoderView({
     Key? key,
-    required this.tool,
-  }) : super(key: key);
+    required Base64ImageTool tool,
+  }) : super(key: key, tool: tool);
 
   @override
-  _Base64ImageContentState createState() => _Base64ImageContentState();
+  _Base64ImageDecoderViewState createState() => _Base64ImageDecoderViewState();
 }
 
-class _Base64ImageContentState extends ToolWidgetState<Base64ImageContent> {
+class _Base64ImageDecoderViewState extends ToolWidgetState<Base64ImageDecoderView, Base64ImageTool> {
   String? _base64;
   Image? _image;
 
   @override
   void initState() {
     super.initState();
-    toolObject = widget.tool;
     _base64 = toolObject.input;
     _decode();
   }
@@ -43,7 +39,7 @@ class _Base64ImageContentState extends ToolWidgetState<Base64ImageContent> {
               onPressed: clear,
               child: const Text("Clear"),
             ),
-            IconButton(onPressed: _copy, icon: const Icon(Icons.copy)),
+            IconButton(onPressed: copy, icon: const Icon(Icons.copy)),
             IconButton(onPressed: _paste, icon: const Icon(Icons.paste)),
           ],
         ),
@@ -105,24 +101,17 @@ class _Base64ImageContentState extends ToolWidgetState<Base64ImageContent> {
   void clear() {
     super.clear();
     setState(() {
-      toolObject.input = null;
       _base64 = null;
       _image = null;
     });
   }
 
   void _paste() async {
-    final text = await ClipboardManager.paste();
-    _base64 = text ?? "";
+    await paste();
 
-    // save to restore
-    toolObject.input = _base64;
-    _decode();
-  }
-
-  void _copy() {
-    if (_base64 != null) {
-      ClipboardManager.copy(_base64!);
+    if (toolObject.input != null) {
+      _base64 = toolObject.input!;
+      _decode();
     }
   }
 

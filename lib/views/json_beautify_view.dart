@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:glad_tools/components/ui/bordered_all.dart';
 import 'package:glad_tools/tools/json_beautify/json_tool.dart';
-import 'package:glad_tools/tools/model/tool_object.dart';
 import 'package:glad_tools/utils/clipboard_manager.dart';
 import 'package:glad_tools/views/tool_widget_state.dart';
 
-class JsonBeautifyView extends StatefulWidget {
-  final ToolObject tool;
-  const JsonBeautifyView({Key? key, required this.tool}) : super(key: key);
+class JsonToolView extends ToolWidget<JsonTool> {
+  const JsonToolView({Key? key, required JsonTool tool})
+      : super(
+          key: key,
+          tool: tool,
+        );
 
   @override
-  _JsonBeautifyViewState createState() => _JsonBeautifyViewState();
+  _JsonToolViewState createState() => _JsonToolViewState();
 }
 
-class _JsonBeautifyViewState extends ToolWidgetState<JsonBeautifyView> {
+class _JsonToolViewState extends ToolWidgetState<JsonToolView, JsonTool> {
   final Key errorKey = const Key("errorText");
   final TextEditingController _controller = TextEditingController();
   int _whitespaceAmount = 2;
@@ -22,7 +23,6 @@ class _JsonBeautifyViewState extends ToolWidgetState<JsonBeautifyView> {
   @override
   void initState() {
     super.initState();
-    toolObject = widget.tool as JsonTool;
     if (toolObject.input != null) {
       _controller.text = toolObject.input!;
       _format();
@@ -56,7 +56,7 @@ class _JsonBeautifyViewState extends ToolWidgetState<JsonBeautifyView> {
               onPressed: _clear,
               child: const Text("Clear"),
             ),
-            IconButton(onPressed: _copy, icon: const Icon(Icons.copy)),
+            IconButton(onPressed: copy, icon: const Icon(Icons.copy)),
             IconButton(onPressed: _paste, icon: const Icon(Icons.paste)),
           ],
         ),
@@ -116,14 +116,11 @@ class _JsonBeautifyViewState extends ToolWidgetState<JsonBeautifyView> {
   }
 
   void _paste() async {
-    final text = await ClipboardManager.paste();
-    _controller.text = text ?? "";
-    toolObject.input = text;
-    _format();
-  }
-
-  void _copy() {
-    ClipboardManager.copy(_controller.text);
+    await paste();
+    if (toolObject.input != null) {
+      _controller.text = toolObject.input!;
+      _format();
+    }
   }
 
   void _format() async {

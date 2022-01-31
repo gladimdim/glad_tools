@@ -1,41 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:glad_tools/tools/model/tool_object.dart';
-import 'package:glad_tools/tools/url_inspector/body_view.dart';
-import 'package:glad_tools/tools/url_inspector/headers_view.dart';
-import 'package:glad_tools/tools/url_inspector/status_view.dart';
+import 'package:glad_tools/tools/url_inspector/url_inspector_tool.dart';
+import 'package:glad_tools/views/url_inspector/body_view.dart';
+import 'package:glad_tools/views/url_inspector/headers_view.dart';
+import 'package:glad_tools/views/url_inspector/status_view.dart';
 import 'package:glad_tools/views/main_view.dart';
 import 'package:glad_tools/views/tool_widget_state.dart';
-import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
-class UrlInspector extends ToolObject {
-  UrlInspector([String? input])
+class UrlInspectorView extends ToolWidget<UrlInspectorTool> {
+  const UrlInspectorView({Key? key, required UrlInspectorTool tool})
       : super(
-          icon: const Icon(Icons.search_sharp),
-          title: "URL Inspector",
-          contentBuilder: (context, tool) => UrlInspectorView(tool: tool),
-          input: input,
+          key: key,
+          tool: tool,
         );
-}
-
-class UrlInspectorView extends StatefulWidget {
-  final ToolObject tool;
-
-  const UrlInspectorView({Key? key, required this.tool}) : super(key: key);
 
   @override
   _UrlInspectorState createState() => _UrlInspectorState();
 }
 
-class _UrlInspectorState extends ToolWidgetState<UrlInspectorView> {
+class _UrlInspectorState extends ToolWidgetState<UrlInspectorView, UrlInspectorTool> {
   final TextEditingController _controller = TextEditingController();
   Response? response;
 
   @override
   void initState() {
     super.initState();
-    toolObject = widget.tool;
     if (toolObject.input != null) {
       _controller.text = toolObject.input!;
       _parse();
@@ -56,7 +45,7 @@ class _UrlInspectorState extends ToolWidgetState<UrlInspectorView> {
               onPressed: _clear,
               child: const Text("Clear"),
             ),
-            IconButton(onPressed: _copy, icon: const Icon(Icons.copy)),
+            IconButton(onPressed: copy, icon: const Icon(Icons.copy)),
             IconButton(onPressed: _paste, icon: const Icon(Icons.paste)),
           ],
         ),
@@ -111,7 +100,7 @@ class _UrlInspectorState extends ToolWidgetState<UrlInspectorView> {
 
   void _parse() async {
     try {
-      response = await http.get(Uri.parse(_controller.text));
+      response = await toolObject.getResponse(_controller.text);
       toolObject.input = _controller.text;
       errorString = null;
     } catch (e) {
@@ -135,15 +124,11 @@ class _UrlInspectorState extends ToolWidgetState<UrlInspectorView> {
   }
 
   void _paste() async {
-    final data = await Clipboard.getData(Clipboard.kTextPlain);
-    if (data != null && data.text != null) {
-      _controller.text = data.text!;
+    await paste();
+    if (toolObject.input != null) {
+      _controller.text = toolObject.input!;
+      _parse();
     }
-    _parse();
-  }
-
-  void _copy() {
-    Clipboard.setData(ClipboardData(text: _controller.text));
   }
 
   @override

@@ -2,24 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:glad_tools/components/ui/bordered_all.dart';
 import 'package:glad_tools/tools/base64_image/base64_image.dart';
+import 'package:glad_tools/tools/tool_object.dart';
 import 'package:glad_tools/utils/clipboard_manager.dart';
+import 'package:glad_tools/views/tool_widget.dart';
 
 class Base64ImageContent extends StatefulWidget {
+  final ToolObject tool;
   const Base64ImageContent({
     Key? key,
+    required this.tool,
   }) : super(key: key);
 
   @override
   _Base64ImageContentState createState() => _Base64ImageContentState();
 }
 
-class _Base64ImageContentState extends State<Base64ImageContent> {
+class _Base64ImageContentState extends ToolWidgetState<Base64ImageContent> {
   String? _base64;
   Image? _image;
-  String? errorString;
 
   @override
   void initState() {
+    toolObject = widget.tool;
     super.initState();
     if (Base64Image.rootObject != null) {
       _base64 = Base64Image.rootObject as String;
@@ -38,7 +42,7 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
               child: const Text("Decode"),
             ),
             TextButton(
-              onPressed: _clear,
+              onPressed: clear,
               child: const Text("Clear"),
             ),
             IconButton(onPressed: _copy, icon: const Icon(Icons.copy)),
@@ -99,13 +103,13 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
     );
   }
 
-  void _clear() {
+  @override
+  void clear() {
+    super.clear();
     setState(() {
       Base64Image.rootObject = null;
-
       _base64 = null;
       _image = null;
-      errorString = null;
     });
   }
 
@@ -137,5 +141,12 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
       errorString = e.toString();
     }
     setState(() {});
+  }
+
+  @override
+  void showError() {
+    if (errorString == null) {
+      return;
+    }
   }
 }

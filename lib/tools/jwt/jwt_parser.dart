@@ -14,7 +14,7 @@ class JwtParser extends ToolObject {
       : super(
           title: "JWT Parser",
           icon: const Icon(Icons.stars_outlined),
-          contentBuilder: (context) => const JwtParserContent(),
+          contentBuilder: (context, tool) => const JwtParserContent(),
         );
 }
 

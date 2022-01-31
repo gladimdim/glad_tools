@@ -11,7 +11,7 @@ class UrlParser extends ToolObject {
       : super(
           title: "URL Tools",
           icon: const Icon(Icons.link),
-          contentBuilder: (context) => const UrlParserContent(),
+          contentBuilder: (context, tool) => const UrlParserContent(),
         );
 }
 

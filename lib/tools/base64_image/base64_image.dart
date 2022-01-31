@@ -12,7 +12,7 @@ class Base64Image extends ToolObject {
       : super(
           title: "Base64 Image Decoder",
           icon: const Icon(Icons.image),
-          contentBuilder: (context) => const Base64ImageContent(),
+          contentBuilder: (context, tool) => Base64ImageContent(tool: tool,),
         );
 
   static Image stringToImage(String input) {

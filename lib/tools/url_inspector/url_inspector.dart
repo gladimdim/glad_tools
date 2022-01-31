@@ -15,7 +15,7 @@ class UrlInspector extends ToolObject {
       : super(
           icon: const Icon(Icons.link),
           title: "URL Inspector",
-          contentBuilder: (context) => const UrlInspectorView(),
+          contentBuilder: (context, tool) => const UrlInspectorView(),
         );
 }
 

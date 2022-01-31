@@ -11,7 +11,7 @@ class JsonTools extends ToolObject {
       : super(
           title: "JSON Beautify",
           icon: const Icon(Icons.format_align_justify),
-          contentBuilder: (context) => const JsonBeautifyView(),
+          contentBuilder: (context, tool) => const JsonBeautifyView(),
         );
 
   static Future<String> stringToBeautifyString(String text,

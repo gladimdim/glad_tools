@@ -54,7 +54,7 @@ class _MainViewState extends State<MainView> {
               )
               .toList(),
         ),
-        body: selected.contentBuilder(context));
+        body: selected.contentBuilder(context, selected));
   }
 
   void _selected(ToolObject element) {

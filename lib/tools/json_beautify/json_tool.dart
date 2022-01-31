@@ -2,16 +2,15 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:glad_tools/tools/json_beautify/json_beautify_view.dart';
 import 'package:glad_tools/tools/json_beautify/json_parser_isolate.dart';
-import 'package:glad_tools/tools/tool_object.dart';
+import 'package:glad_tools/tools/model/tool_object.dart';
 
-class JsonTools extends ToolObject {
-  static dynamic rootObject;
-
-  JsonTools()
+class JsonTool extends ToolObject {
+  JsonTool([String? input])
       : super(
           title: "JSON Beautify",
           icon: const Icon(Icons.format_align_justify),
-          contentBuilder: (context) => const JsonBeautifyView(),
+          contentBuilder: (context, tool) => JsonBeautifyView(tool: tool,),
+          input: input,
         );
 
   static Future<String> stringToBeautifyString(String text,

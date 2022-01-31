@@ -1,30 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:glad_tools/components/ui/bordered_all.dart';
-import 'package:glad_tools/tools/base64_image/base64_image.dart';
+import 'package:glad_tools/tools/base64_image/base64_image_tool.dart';
+import 'package:glad_tools/tools/model/tool_object.dart';
 import 'package:glad_tools/utils/clipboard_manager.dart';
+import 'package:glad_tools/views/tool_widget_state.dart';
 
 class Base64ImageContent extends StatefulWidget {
+  final ToolObject tool;
   const Base64ImageContent({
     Key? key,
+    required this.tool,
   }) : super(key: key);
 
   @override
   _Base64ImageContentState createState() => _Base64ImageContentState();
 }
 
-class _Base64ImageContentState extends State<Base64ImageContent> {
+class _Base64ImageContentState extends ToolWidgetState<Base64ImageContent> {
   String? _base64;
   Image? _image;
-  String? errorString;
 
   @override
   void initState() {
     super.initState();
-    if (Base64Image.rootObject != null) {
-      _base64 = Base64Image.rootObject as String;
-      _decode();
-    }
+    toolObject = widget.tool;
+    _base64 = toolObject.input;
+    _decode();
   }
 
   @override
@@ -38,7 +40,7 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
               child: const Text("Decode"),
             ),
             TextButton(
-              onPressed: _clear,
+              onPressed: clear,
               child: const Text("Clear"),
             ),
             IconButton(onPressed: _copy, icon: const Icon(Icons.copy)),
@@ -99,13 +101,13 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
     );
   }
 
-  void _clear() {
+  @override
+  void clear() {
+    super.clear();
     setState(() {
-      Base64Image.rootObject = null;
-
+      toolObject.input = null;
       _base64 = null;
       _image = null;
-      errorString = null;
     });
   }
 
@@ -114,7 +116,7 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
     _base64 = text ?? "";
 
     // save to restore
-    Base64Image.rootObject = _base64;
+    toolObject.input = _base64;
     _decode();
   }
 
@@ -132,10 +134,17 @@ class _Base64ImageContentState extends State<Base64ImageContent> {
     }
 
     try {
-      _image = Base64Image.stringToImage(sImage);
+      _image = Base64ImageTool.stringToImage(sImage);
     } catch (e) {
       errorString = e.toString();
     }
     setState(() {});
+  }
+
+  @override
+  void showError() {
+    if (errorString == null) {
+      return;
+    }
   }
 }

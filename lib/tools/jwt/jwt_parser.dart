@@ -3,41 +3,43 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:glad_tools/components/ui/bordered_all.dart';
-import 'package:glad_tools/tools/tool_object.dart';
+import 'package:glad_tools/tools/model/tool_object.dart';
 import 'package:glad_tools/utils/duration.dart';
 import 'package:glad_tools/views/main_view.dart';
+import 'package:glad_tools/views/tool_widget_state.dart';
 
 class JwtParser extends ToolObject {
-  static dynamic rootObject;
-
-  JwtParser()
+  JwtParser([String? input])
       : super(
           title: "JWT Parser",
           icon: const Icon(Icons.stars_outlined),
-          contentBuilder: (context) => const JwtParserContent(),
+          contentBuilder: (context, tool) => JwtParserContent(tool: tool),
+    input: input,
         );
 }
 
 class JwtParserContent extends StatefulWidget {
+  final ToolObject tool;
   const JwtParserContent({
     Key? key,
+    required this.tool,
   }) : super(key: key);
 
   @override
   _Base64ImageContentState createState() => _Base64ImageContentState();
 }
 
-class _Base64ImageContentState extends State<JwtParserContent> {
+class _Base64ImageContentState extends ToolWidgetState<JwtParserContent> {
   final TextEditingController _controller = TextEditingController();
   Map? _parsed;
   DateTime? _expirationDate;
-  String? errorString;
 
   @override
   void initState() {
     super.initState();
-    if (JwtParser.rootObject != null) {
-      _controller.text = JwtParser.rootObject as String;
+    toolObject = widget.tool as JwtParser;
+    if (toolObject.input != null) {
+      _controller.text = toolObject.input!;
       _parse();
     }
   }
@@ -158,9 +160,9 @@ class _Base64ImageContentState extends State<JwtParserContent> {
   }
 
   void _clear() {
+    super.clear();
     setState(() {
       _parsed = null;
-      errorString = null;
       _controller.text = "";
       _expirationDate = null;
     });
@@ -181,7 +183,7 @@ class _Base64ImageContentState extends State<JwtParserContent> {
 
   void _parse() {
     errorString = null;
-    JwtParser.rootObject = _controller.text;
+    toolObject.input = _controller.text;
     if (_controller.text == "") {
       return;
     }
@@ -236,5 +238,10 @@ class _Base64ImageContentState extends State<JwtParserContent> {
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  @override
+  void showError() {
+    // TODO: implement showError
   }
 }

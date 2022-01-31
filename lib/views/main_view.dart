@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:glad_tools/tools/base64_image/base64_image.dart';
-import 'package:glad_tools/tools/json_beautify/json_tools.dart';
-import 'package:glad_tools/tools/tool_object.dart';
+import 'package:glad_tools/tools/base64_image/base64_image_tool.dart';
+import 'package:glad_tools/tools/json_beautify/json_tool.dart';
+import 'package:glad_tools/tools/model/tool_object.dart';
 import 'package:glad_tools/tools/jwt/jwt_parser.dart';
 import 'package:glad_tools/tools/url_inspector/url_inspector.dart';
 import 'package:glad_tools/tools/url_parser/url_parser.dart';
@@ -17,8 +17,8 @@ class MainView extends StatefulWidget {
 
 class _MainViewState extends State<MainView> {
   final List<ToolObject> actions = [
-    Base64Image(),
-    JsonTools(),
+    Base64ImageTool(),
+    JsonTool(),
     UrlParser(),
     JwtParser(),
     UrlInspector(),
@@ -34,19 +34,20 @@ class _MainViewState extends State<MainView> {
           actions: actions
               .map(
                 (e) => ElevatedButton(
-                  child: Row(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       selected == e
                           ? const Icon(Icons.subdirectory_arrow_right)
                           : e.icon,
-                      selected == e ? Text(
+                      Text(
                         e.title,
                         style: TextStyle(
-                          fontWeight: selected == e
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                        ),
-                      ) : Container(),
+                            fontWeight: selected == e
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                            fontSize: selected == e ? 18 : 12),
+                      ),
                     ],
                   ),
                   onPressed: () => _selected(e),
@@ -54,7 +55,7 @@ class _MainViewState extends State<MainView> {
               )
               .toList(),
         ),
-        body: selected.contentBuilder(context));
+        body: selected.contentBuilder(context, selected));
   }
 
   void _selected(ToolObject element) {

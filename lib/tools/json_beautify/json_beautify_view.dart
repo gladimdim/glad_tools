@@ -1,28 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:glad_tools/components/ui/bordered_all.dart';
-import 'package:glad_tools/tools/json_beautify/json_tools.dart';
-import 'package:glad_tools/tools/json_beautify/json_parser_isolate.dart';
+import 'package:glad_tools/tools/json_beautify/json_tool.dart';
+import 'package:glad_tools/tools/model/tool_object.dart';
 import 'package:glad_tools/utils/clipboard_manager.dart';
+import 'package:glad_tools/views/tool_widget_state.dart';
 
 class JsonBeautifyView extends StatefulWidget {
-  const JsonBeautifyView({Key? key}) : super(key: key);
+  final ToolObject tool;
+  const JsonBeautifyView({Key? key, required this.tool}) : super(key: key);
 
   @override
   _JsonBeautifyViewState createState() => _JsonBeautifyViewState();
 }
 
-class _JsonBeautifyViewState extends State<JsonBeautifyView> {
+class _JsonBeautifyViewState extends ToolWidgetState<JsonBeautifyView> {
   final Key errorKey = const Key("errorText");
   final TextEditingController _controller = TextEditingController();
-  String? errorString;
   int _whitespaceAmount = 2;
 
   @override
   void initState() {
     super.initState();
-    if (JsonTools.rootObject != null) {
-      _controller.text = JsonTools.rootObject as String;
+    toolObject = widget.tool as JsonTool;
+    if (toolObject.input != null) {
+      _controller.text = toolObject.input!;
       _format();
     }
   }
@@ -100,6 +102,7 @@ class _JsonBeautifyViewState extends State<JsonBeautifyView> {
   }
 
   void _clear() {
+    super.clear();
     setState(() {
       _controller.value = TextEditingValue(
         text: "",
@@ -108,14 +111,14 @@ class _JsonBeautifyViewState extends State<JsonBeautifyView> {
         ),
       );
       errorString = null;
-      JsonTools.rootObject = null;
+      toolObject.input = null;
     });
   }
 
   void _paste() async {
     final text = await ClipboardManager.paste();
     _controller.text = text ?? "";
-    JsonTools.rootObject = text;
+    toolObject.input = text;
     _format();
   }
 
@@ -124,7 +127,7 @@ class _JsonBeautifyViewState extends State<JsonBeautifyView> {
   }
 
   void _format() async {
-    JsonTools.rootObject = _controller.text;
+    toolObject.input = _controller.text;
 
     errorString = null;
     if (_controller.text.isEmpty) {
@@ -132,7 +135,7 @@ class _JsonBeautifyViewState extends State<JsonBeautifyView> {
     }
 
     try {
-      final result = await JsonTools.stringToBeautifyString(_controller.text,
+      final result = await JsonTool.stringToBeautifyString(_controller.text,
           withIndent: _whitespaceAmount);
       setState(() {
         _controller.text = result;
@@ -147,7 +150,7 @@ class _JsonBeautifyViewState extends State<JsonBeautifyView> {
       return;
     }
     try {
-      final minified = await JsonTools.minifyString(_controller.text);
+      final minified = await JsonTool.minifyString(_controller.text);
       setState(() {
         _controller.text = minified;
       });
@@ -169,5 +172,10 @@ class _JsonBeautifyViewState extends State<JsonBeautifyView> {
       _whitespaceAmount = newValue;
       _format();
     });
+  }
+
+  @override
+  void showError() {
+    // TODO: implement showError
   }
 }

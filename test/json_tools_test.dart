@@ -5,14 +5,14 @@ void main() {
   group("JSON Tool tests", () {
     test("Can minify json object with given indent #1", () {
       final obj = { "test": 3, "array": [1, 2, 3] };
-      final result = JsonTools.formatMapToString(obj, 2);
+      final result = JsonTools.formatObjectToString(obj, 2);
       const expected = """{\n   \"test\": 3,\n   \"array\": [\n      1,\n      2,\n      3\n   ]\n}""";
       expect(result, equals(expected), reason: "Map was minified into string with indent 2");
     });
 
     test("Can minify json object with given indent #2", () {
       final obj = { "test": 3, "array": [1, 2, 3] };
-      final result = JsonTools.formatMapToString(obj, 4);
+      final result = JsonTools.formatObjectToString(obj, 4);
       const expected = """{\n     \"test\": 3,\n     \"array\": [\n          1,\n          2,\n          3\n     ]\n}""";
       expect(result, equals(expected), reason: "Map was minified into string with indent 4");
     });

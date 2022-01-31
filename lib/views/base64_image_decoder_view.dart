@@ -39,7 +39,7 @@ class _Base64ImageDecoderViewState extends ToolWidgetState<Base64ImageDecoderVie
               onPressed: clear,
               child: const Text("Clear"),
             ),
-            IconButton(onPressed: _copy, icon: const Icon(Icons.copy)),
+            IconButton(onPressed: copy, icon: const Icon(Icons.copy)),
             IconButton(onPressed: _paste, icon: const Icon(Icons.paste)),
           ],
         ),
@@ -101,24 +101,17 @@ class _Base64ImageDecoderViewState extends ToolWidgetState<Base64ImageDecoderVie
   void clear() {
     super.clear();
     setState(() {
-      toolObject.input = null;
       _base64 = null;
       _image = null;
     });
   }
 
   void _paste() async {
-    final text = await ClipboardManager.paste();
-    _base64 = text ?? "";
+    await paste();
 
-    // save to restore
-    toolObject.input = _base64;
-    _decode();
-  }
-
-  void _copy() {
-    if (_base64 != null) {
-      ClipboardManager.copy(_base64!);
+    if (toolObject.input != null) {
+      _base64 = toolObject.input!;
+      _decode();
     }
   }
 

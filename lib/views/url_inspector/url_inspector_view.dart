@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:glad_tools/tools/url_inspector/url_inspector.dart';
+import 'package:glad_tools/tools/url_inspector/url_inspector_tool.dart';
 import 'package:glad_tools/views/url_inspector/body_view.dart';
 import 'package:glad_tools/views/url_inspector/headers_view.dart';
 import 'package:glad_tools/views/url_inspector/status_view.dart';
@@ -7,8 +7,8 @@ import 'package:glad_tools/views/main_view.dart';
 import 'package:glad_tools/views/tool_widget_state.dart';
 import 'package:http/http.dart';
 
-class UrlInspectorView extends ToolWidget<UrlInspector> {
-  const UrlInspectorView({Key? key, required UrlInspector tool})
+class UrlInspectorView extends ToolWidget<UrlInspectorTool> {
+  const UrlInspectorView({Key? key, required UrlInspectorTool tool})
       : super(
           key: key,
           tool: tool,
@@ -18,7 +18,7 @@ class UrlInspectorView extends ToolWidget<UrlInspector> {
   _UrlInspectorState createState() => _UrlInspectorState();
 }
 
-class _UrlInspectorState extends ToolWidgetState<UrlInspectorView, UrlInspector> {
+class _UrlInspectorState extends ToolWidgetState<UrlInspectorView, UrlInspectorTool> {
   final TextEditingController _controller = TextEditingController();
   Response? response;
 
@@ -124,8 +124,11 @@ class _UrlInspectorState extends ToolWidgetState<UrlInspectorView, UrlInspector>
   }
 
   void _paste() async {
-    paste();
-    _parse();
+    await paste();
+    if (toolObject.input != null) {
+      _controller.text = toolObject.input!;
+      _parse();
+    }
   }
 
   @override

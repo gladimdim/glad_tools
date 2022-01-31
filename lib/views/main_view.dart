@@ -3,7 +3,7 @@ import 'package:glad_tools/tools/base64_image/base64_image_tool.dart';
 import 'package:glad_tools/tools/json_beautify/json_tool.dart';
 import 'package:glad_tools/tools/model/tool_object.dart';
 import 'package:glad_tools/tools/jwt/jwt_parser.dart';
-import 'package:glad_tools/tools/url_inspector/url_inspector.dart';
+import 'package:glad_tools/tools/url_inspector/url_inspector_tool.dart';
 import 'package:glad_tools/tools/url_parser/url_parser.dart';
 
 const TOP_BAR_HEIGHT = 100.0;
@@ -19,9 +19,9 @@ class _MainViewState extends State<MainView> {
   final List<ToolObject> actions = [
     Base64ImageTool(),
     JsonTool(),
-    UrlParser(),
+    UrlParserTool(),
     JwtParserTool(),
-    UrlInspector(),
+    UrlInspectorTool(),
   ];
 
   late ToolObject selected = actions[0];

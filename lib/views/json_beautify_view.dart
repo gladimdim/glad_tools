@@ -56,7 +56,7 @@ class _JsonToolViewState extends ToolWidgetState<JsonToolView, JsonTool> {
               onPressed: _clear,
               child: const Text("Clear"),
             ),
-            IconButton(onPressed: _copy, icon: const Icon(Icons.copy)),
+            IconButton(onPressed: copy, icon: const Icon(Icons.copy)),
             IconButton(onPressed: _paste, icon: const Icon(Icons.paste)),
           ],
         ),
@@ -116,14 +116,11 @@ class _JsonToolViewState extends ToolWidgetState<JsonToolView, JsonTool> {
   }
 
   void _paste() async {
-    final text = await ClipboardManager.paste();
-    _controller.text = text ?? "";
-    toolObject.input = text;
-    _format();
-  }
-
-  void _copy() {
-    ClipboardManager.copy(_controller.text);
+    await paste();
+    if (toolObject.input != null) {
+      _controller.text = toolObject.input!;
+      _format();
+    }
   }
 
   void _format() async {

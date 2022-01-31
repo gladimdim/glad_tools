@@ -34,7 +34,7 @@ class ToolWidgetState<T extends ToolWidget, V extends ToolObject> extends State<
     }
   }
 
-  void paste() async {
+  Future paste() async {
     final data = await ClipboardManager.paste();
     if (data != null) {
       toolObject.input = data;

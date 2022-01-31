@@ -156,7 +156,7 @@ class _Base64ImageContentState
   }
 
   void _paste() async {
-    paste();
+    await paste();
     _parse();
   }
 

@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:glad_tools/tools/model/tool_object.dart';
+import 'package:glad_tools/tools/url_inspector/url_inspector.dart';
 import 'package:glad_tools/views/url_inspector/body_view.dart';
 import 'package:glad_tools/views/url_inspector/headers_view.dart';
 import 'package:glad_tools/views/url_inspector/status_view.dart';
 import 'package:glad_tools/views/main_view.dart';
 import 'package:glad_tools/views/tool_widget_state.dart';
-import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
-class UrlInspectorView extends ToolWidget {
-  const UrlInspectorView({Key? key, required ToolObject tool})
+class UrlInspectorView extends ToolWidget<UrlInspector> {
+  const UrlInspectorView({Key? key, required UrlInspector tool})
       : super(
           key: key,
           tool: tool,
@@ -20,7 +18,7 @@ class UrlInspectorView extends ToolWidget {
   _UrlInspectorState createState() => _UrlInspectorState();
 }
 
-class _UrlInspectorState extends ToolWidgetState<UrlInspectorView> {
+class _UrlInspectorState extends ToolWidgetState<UrlInspectorView, UrlInspector> {
   final TextEditingController _controller = TextEditingController();
   Response? response;
 
@@ -47,7 +45,7 @@ class _UrlInspectorState extends ToolWidgetState<UrlInspectorView> {
               onPressed: _clear,
               child: const Text("Clear"),
             ),
-            IconButton(onPressed: _copy, icon: const Icon(Icons.copy)),
+            IconButton(onPressed: copy, icon: const Icon(Icons.copy)),
             IconButton(onPressed: _paste, icon: const Icon(Icons.paste)),
           ],
         ),
@@ -102,7 +100,7 @@ class _UrlInspectorState extends ToolWidgetState<UrlInspectorView> {
 
   void _parse() async {
     try {
-      response = await http.get(Uri.parse(_controller.text));
+      response = await toolObject.getResponse(_controller.text);
       toolObject.input = _controller.text;
       errorString = null;
     } catch (e) {
@@ -126,15 +124,8 @@ class _UrlInspectorState extends ToolWidgetState<UrlInspectorView> {
   }
 
   void _paste() async {
-    final data = await Clipboard.getData(Clipboard.kTextPlain);
-    if (data != null && data.text != null) {
-      _controller.text = data.text!;
-    }
+    paste();
     _parse();
-  }
-
-  void _copy() {
-    Clipboard.setData(ClipboardData(text: _controller.text));
   }
 
   @override

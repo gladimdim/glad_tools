@@ -11,7 +11,7 @@ class Base64ImageTool extends ToolObject {
           title: "Base64 Image Decoder",
           icon: const Icon(Icons.image),
           contentBuilder: (context, tool) => Base64ImageDecoderView(
-            tool: tool,
+            tool: tool as Base64ImageTool,
           ),
           input: input,
         );

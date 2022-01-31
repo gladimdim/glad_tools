@@ -10,22 +10,22 @@ class UrlParser extends ToolObject {
       : super(
           title: "URL Tools",
           icon: const Icon(Icons.link),
-          contentBuilder: (context, tool) => UrlParserContent(tool: tool),
+          contentBuilder: (context, tool) => UrlParserContent(tool: tool as UrlParser),
           input: input,
         );
 }
 
-class UrlParserContent extends ToolWidget {
+class UrlParserContent extends ToolWidget<UrlParser> {
   const UrlParserContent({
     Key? key,
-    required ToolObject tool,
+    required UrlParser tool,
   }) : super(key: key, tool: tool);
 
   @override
   _Base64ImageContentState createState() => _Base64ImageContentState();
 }
 
-class _Base64ImageContentState extends ToolWidgetState<UrlParserContent> {
+class _Base64ImageContentState extends ToolWidgetState<UrlParserContent, UrlParser> {
   final TextEditingController _controller = TextEditingController();
   final TextEditingController _hostController = TextEditingController();
   final TextEditingController _pathController = TextEditingController();
@@ -36,7 +36,6 @@ class _Base64ImageContentState extends ToolWidgetState<UrlParserContent> {
   @override
   void initState() {
     super.initState();
-    toolObject = widget.tool;
     if (toolObject.input != null) {
       _controller.text = toolObject.input!;
       _parse();

@@ -20,7 +20,7 @@ class _MainViewState extends State<MainView> {
     Base64ImageTool(),
     JsonTool(),
     UrlParser(),
-    JwtParser(),
+    JwtParserTool(),
     UrlInspector(),
   ];
 

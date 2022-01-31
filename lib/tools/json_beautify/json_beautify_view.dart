@@ -13,6 +13,7 @@ class JsonBeautifyView extends StatefulWidget {
 }
 
 class _JsonBeautifyViewState extends State<JsonBeautifyView> {
+  final Key errorKey = const Key("errorText");
   final TextEditingController _controller = TextEditingController();
   String? errorString;
   int _whitespaceAmount = 2;
@@ -87,7 +88,7 @@ class _JsonBeautifyViewState extends State<JsonBeautifyView> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Center(
-                      child: Text(errorString!),
+                      child: Text(errorString!, key: errorKey),
                     ),
                   ),
                 ),

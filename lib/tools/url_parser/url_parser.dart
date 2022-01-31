@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:glad_tools/tools/model/tool_object.dart';
@@ -12,16 +11,15 @@ class UrlParser extends ToolObject {
           title: "URL Tools",
           icon: const Icon(Icons.link),
           contentBuilder: (context, tool) => UrlParserContent(tool: tool),
-    input: input,
+          input: input,
         );
 }
 
-class UrlParserContent extends StatefulWidget {
-  final ToolObject tool;
+class UrlParserContent extends ToolWidget {
   const UrlParserContent({
     Key? key,
-    required this.tool,
-  }) : super(key: key);
+    required ToolObject tool,
+  }) : super(key: key, tool: tool);
 
   @override
   _Base64ImageContentState createState() => _Base64ImageContentState();
@@ -63,7 +61,6 @@ class _Base64ImageContentState extends ToolWidgetState<UrlParserContent> {
             IconButton(onPressed: _paste, icon: const Icon(Icons.paste)),
             TextButton(onPressed: _decodeUrl, child: const Text("Decode")),
             TextButton(onPressed: _encodeUrl, child: const Text("Encode")),
-
           ],
         ),
         ConstrainedBox(
@@ -93,7 +90,8 @@ class _Base64ImageContentState extends ToolWidgetState<UrlParserContent> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
-                          decoration: const InputDecoration(label: Text("Scheme")),
+                          decoration:
+                              const InputDecoration(label: Text("Scheme")),
                           controller: _schemeController,
                           onSubmitted: (String? value) {
                             if (uri == null) {
@@ -113,7 +111,8 @@ class _Base64ImageContentState extends ToolWidgetState<UrlParserContent> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
-                          decoration: const InputDecoration(label: Text("Host")),
+                          decoration:
+                              const InputDecoration(label: Text("Host")),
                           controller: _hostController,
                           onSubmitted: (String? value) {
                             if (uri == null) {
@@ -129,8 +128,6 @@ class _Base64ImageContentState extends ToolWidgetState<UrlParserContent> {
                         ),
                       ),
                     ),
-
-
                   ],
                 ),
                 Row(
@@ -140,7 +137,8 @@ class _Base64ImageContentState extends ToolWidgetState<UrlParserContent> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
-                          decoration: const InputDecoration(label: Text("Path")),
+                          decoration:
+                              const InputDecoration(label: Text("Path")),
                           controller: _pathController,
                           onSubmitted: (String? value) {
                             if (uri == null) {
@@ -161,7 +159,8 @@ class _Base64ImageContentState extends ToolWidgetState<UrlParserContent> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
-                          decoration: const InputDecoration(label: Text("Query")),
+                          decoration:
+                              const InputDecoration(label: Text("Query")),
                           controller: _queryController,
                           onSubmitted: (String? value) {
                             if (uri == null) {
@@ -188,7 +187,6 @@ class _Base64ImageContentState extends ToolWidgetState<UrlParserContent> {
             ),
           ),
         ),
-
       ],
     );
   }
@@ -229,7 +227,6 @@ class _Base64ImageContentState extends ToolWidgetState<UrlParserContent> {
       _queryController.text = parsedUri.query;
       _schemeController.text = parsedUri.scheme;
       uri = parsedUri;
-
     });
   }
 
@@ -264,7 +261,6 @@ class _Base64ImageContentState extends ToolWidgetState<UrlParserContent> {
     final decoded = Uri.decodeFull(_url);
     _controller.text = decoded;
     _parse();
-
   }
 
   @override

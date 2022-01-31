@@ -18,12 +18,11 @@ class JwtParser extends ToolObject {
         );
 }
 
-class JwtParserContent extends StatefulWidget {
-  final ToolObject tool;
+class JwtParserContent extends ToolWidget {
   const JwtParserContent({
     Key? key,
-    required this.tool,
-  }) : super(key: key);
+    required ToolObject tool,
+  }) : super(key: key, tool: tool);
 
   @override
   _Base64ImageContentState createState() => _Base64ImageContentState();

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:glad_tools/tools/base64_image/base64_content_view.dart';
+import 'package:glad_tools/views/base64_image_decoder_view.dart';
 import 'package:glad_tools/tools/model/tool_object.dart';
 
 class Base64ImageTool extends ToolObject {
@@ -10,7 +10,7 @@ class Base64ImageTool extends ToolObject {
       : super(
           title: "Base64 Image Decoder",
           icon: const Icon(Icons.image),
-          contentBuilder: (context, tool) => Base64ImageContent(
+          contentBuilder: (context, tool) => Base64ImageDecoderView(
             tool: tool,
           ),
           input: input,

@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:glad_tools/components/ui/bordered_all.dart';
 import 'package:glad_tools/tools/json_beautify/json_tool.dart';
 import 'package:glad_tools/tools/model/tool_object.dart';
 import 'package:glad_tools/utils/clipboard_manager.dart';
 import 'package:glad_tools/views/tool_widget_state.dart';
 
-class JsonBeautifyView extends StatefulWidget {
-  final ToolObject tool;
-  const JsonBeautifyView({Key? key, required this.tool}) : super(key: key);
+class JsonToolView extends ToolWidget {
+  const JsonToolView({Key? key, required ToolObject tool})
+      : super(
+          key: key,
+          tool: tool,
+        );
 
   @override
-  _JsonBeautifyViewState createState() => _JsonBeautifyViewState();
+  _JsonToolViewState createState() => _JsonToolViewState();
 }
 
-class _JsonBeautifyViewState extends ToolWidgetState<JsonBeautifyView> {
+class _JsonToolViewState extends ToolWidgetState<JsonToolView> {
   final Key errorKey = const Key("errorText");
   final TextEditingController _controller = TextEditingController();
   int _whitespaceAmount = 2;

@@ -1,41 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:glad_tools/tools/tool_object.dart';
+import 'package:glad_tools/tools/model/tool_object.dart';
 import 'package:glad_tools/tools/url_inspector/body_view.dart';
 import 'package:glad_tools/tools/url_inspector/headers_view.dart';
 import 'package:glad_tools/tools/url_inspector/status_view.dart';
 import 'package:glad_tools/views/main_view.dart';
+import 'package:glad_tools/views/tool_widget_state.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
 class UrlInspector extends ToolObject {
-  static dynamic rootObject;
-
-  UrlInspector()
+  UrlInspector([String? input])
       : super(
           icon: const Icon(Icons.link),
           title: "URL Inspector",
-          contentBuilder: (context, tool) => const UrlInspectorView(),
+          contentBuilder: (context, tool) => UrlInspectorView(tool: tool),
+          input: input,
         );
 }
 
 class UrlInspectorView extends StatefulWidget {
-  const UrlInspectorView({Key? key}) : super(key: key);
+  final ToolObject tool;
+
+  const UrlInspectorView({Key? key, required this.tool}) : super(key: key);
 
   @override
   _UrlInspectorState createState() => _UrlInspectorState();
 }
 
-class _UrlInspectorState extends State<UrlInspectorView> {
+class _UrlInspectorState extends ToolWidgetState<UrlInspectorView> {
   final TextEditingController _controller = TextEditingController();
   Response? response;
-  String? errorString;
 
   @override
   void initState() {
     super.initState();
-    if (UrlInspector.rootObject != null) {
-      _controller.text = UrlInspector.rootObject as String;
+    toolObject = widget.tool;
+    if (toolObject.input != null) {
+      _controller.text = toolObject.input!;
       _parse();
     }
   }
@@ -110,7 +112,7 @@ class _UrlInspectorState extends State<UrlInspectorView> {
   void _parse() async {
     try {
       response = await http.get(Uri.parse(_controller.text));
-      UrlInspector.rootObject = _controller.text;
+      toolObject.input = _controller.text;
       errorString = null;
     } catch (e) {
       setState(() {
@@ -122,13 +124,13 @@ class _UrlInspectorState extends State<UrlInspectorView> {
   }
 
   void _clear() {
+    super.clear();
     _controller.value = TextEditingValue(
       text: "",
       selection: TextSelection.fromPosition(
         const TextPosition(offset: 0),
       ),
     );
-    errorString = null;
     setState(() {});
   }
 
@@ -142,5 +144,10 @@ class _UrlInspectorState extends State<UrlInspectorView> {
 
   void _copy() {
     Clipboard.setData(ClipboardData(text: _controller.text));
+  }
+
+  @override
+  void showError() {
+    // TODO: implement showError
   }
 }

@@ -1,43 +1,46 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:glad_tools/tools/tool_object.dart';
+import 'package:glad_tools/tools/model/tool_object.dart';
 import 'package:glad_tools/tools/url_parser/query_list.dart';
 import 'package:glad_tools/views/main_view.dart';
+import 'package:glad_tools/views/tool_widget_state.dart';
 
 class UrlParser extends ToolObject {
-  static dynamic rootObject;
-  UrlParser()
+  UrlParser([String? input])
       : super(
           title: "URL Tools",
           icon: const Icon(Icons.link),
-          contentBuilder: (context, tool) => const UrlParserContent(),
+          contentBuilder: (context, tool) => UrlParserContent(tool: tool),
+    input: input,
         );
 }
 
 class UrlParserContent extends StatefulWidget {
+  final ToolObject tool;
   const UrlParserContent({
     Key? key,
+    required this.tool,
   }) : super(key: key);
 
   @override
   _Base64ImageContentState createState() => _Base64ImageContentState();
 }
 
-class _Base64ImageContentState extends State<UrlParserContent> {
+class _Base64ImageContentState extends ToolWidgetState<UrlParserContent> {
   final TextEditingController _controller = TextEditingController();
   final TextEditingController _hostController = TextEditingController();
   final TextEditingController _pathController = TextEditingController();
   final TextEditingController _queryController = TextEditingController();
   final TextEditingController _schemeController = TextEditingController();
-  String? errorString;
   Uri? uri;
 
   @override
   void initState() {
     super.initState();
-    if (UrlParser.rootObject != null) {
-      _controller.text = UrlParser.rootObject as String;
+    toolObject = widget.tool;
+    if (toolObject.input != null) {
+      _controller.text = toolObject.input!;
       _parse();
     }
   }
@@ -191,10 +194,9 @@ class _Base64ImageContentState extends State<UrlParserContent> {
   }
 
   _clear() {
+    super.clear();
     setState(() {
-      errorString = null;
       uri = null;
-      UrlParser.rootObject = null;
       _controller.clear();
       _pathController.clear();
       _hostController.clear();
@@ -219,7 +221,7 @@ class _Base64ImageContentState extends State<UrlParserContent> {
 
   void _parse() {
     final _url = _controller.text;
-    UrlParser.rootObject = _url;
+    toolObject.input = _url;
     final parsedUri = Uri.parse(_url);
     setState(() {
       _hostController.text = parsedUri.host;
@@ -263,5 +265,10 @@ class _Base64ImageContentState extends State<UrlParserContent> {
     _controller.text = decoded;
     _parse();
 
+  }
+
+  @override
+  void showError() {
+    // TODO: implement showError
   }
 }

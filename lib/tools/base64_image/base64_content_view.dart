@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:glad_tools/components/ui/bordered_all.dart';
-import 'package:glad_tools/tools/base64_image/base64_image.dart';
-import 'package:glad_tools/tools/tool_object.dart';
+import 'package:glad_tools/tools/base64_image/base64_image_tool.dart';
+import 'package:glad_tools/tools/model/tool_object.dart';
 import 'package:glad_tools/utils/clipboard_manager.dart';
-import 'package:glad_tools/views/tool_widget.dart';
+import 'package:glad_tools/views/tool_widget_state.dart';
 
 class Base64ImageContent extends StatefulWidget {
   final ToolObject tool;
@@ -23,12 +23,10 @@ class _Base64ImageContentState extends ToolWidgetState<Base64ImageContent> {
 
   @override
   void initState() {
-    toolObject = widget.tool;
     super.initState();
-    if (Base64Image.rootObject != null) {
-      _base64 = Base64Image.rootObject as String;
-      _decode();
-    }
+    toolObject = widget.tool;
+    _base64 = toolObject.input;
+    _decode();
   }
 
   @override
@@ -107,7 +105,7 @@ class _Base64ImageContentState extends ToolWidgetState<Base64ImageContent> {
   void clear() {
     super.clear();
     setState(() {
-      Base64Image.rootObject = null;
+      toolObject.input = null;
       _base64 = null;
       _image = null;
     });
@@ -118,7 +116,7 @@ class _Base64ImageContentState extends ToolWidgetState<Base64ImageContent> {
     _base64 = text ?? "";
 
     // save to restore
-    Base64Image.rootObject = _base64;
+    toolObject.input = _base64;
     _decode();
   }
 
@@ -136,7 +134,7 @@ class _Base64ImageContentState extends ToolWidgetState<Base64ImageContent> {
     }
 
     try {
-      _image = Base64Image.stringToImage(sImage);
+      _image = Base64ImageTool.stringToImage(sImage);
     } catch (e) {
       errorString = e.toString();
     }

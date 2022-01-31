@@ -34,19 +34,20 @@ class _MainViewState extends State<MainView> {
           actions: actions
               .map(
                 (e) => ElevatedButton(
-                  child: Row(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       selected == e
                           ? const Icon(Icons.subdirectory_arrow_right)
                           : e.icon,
-                      selected == e ? Text(
+                      Text(
                         e.title,
                         style: TextStyle(
-                          fontWeight: selected == e
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                        ),
-                      ) : Container(),
+                            fontWeight: selected == e
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                            fontSize: selected == e ? 18 : 12),
+                      ),
                     ],
                   ),
                   onPressed: () => _selected(e),

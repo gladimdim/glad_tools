@@ -33,7 +33,6 @@ class _Base64ImageContentState extends ToolWidgetState<JwtParserContent> {
   final TextEditingController _controller = TextEditingController();
   Map? _parsed;
   DateTime? _expirationDate;
-  String? errorString;
 
   @override
   void initState() {
@@ -161,9 +160,9 @@ class _Base64ImageContentState extends ToolWidgetState<JwtParserContent> {
   }
 
   void _clear() {
+    super.clear();
     setState(() {
       _parsed = null;
-      errorString = null;
       _controller.text = "";
       _expirationDate = null;
     });

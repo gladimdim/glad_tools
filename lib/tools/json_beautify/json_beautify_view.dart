@@ -143,6 +143,9 @@ class _JsonBeautifyViewState extends State<JsonBeautifyView> {
   }
 
   void _minify() async {
+    if (_controller.text.isEmpty) {
+      return;
+    }
     try {
       final minified = await JsonTools.minifyString(_controller.text);
       setState(() {

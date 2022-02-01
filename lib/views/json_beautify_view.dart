@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:glad_tools/components/ui/bordered_all.dart';
 import 'package:glad_tools/tools/json_beautify/json_tool.dart';
 import 'package:glad_tools/utils/clipboard_manager.dart';
-import 'package:glad_tools/views/tool_widget_state.dart';
+import 'package:glad_tools/views/tool_widget.dart';
 
 class JsonToolView extends ToolWidget<JsonTool> {
   const JsonToolView({Key? key, required JsonTool tool})

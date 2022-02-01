@@ -4,7 +4,7 @@ import 'package:glad_tools/components/ui/bordered_all.dart';
 import 'package:glad_tools/tools/jwt/jwt_parser.dart';
 import 'package:glad_tools/utils/duration.dart';
 import 'package:glad_tools/views/main_view.dart';
-import 'package:glad_tools/views/tool_widget_state.dart';
+import 'package:glad_tools/views/tool_widget.dart';
 
 class JwtParserView extends ToolWidget<JwtParserTool> {
   const JwtParserView({

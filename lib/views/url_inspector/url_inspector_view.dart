@@ -4,7 +4,7 @@ import 'package:glad_tools/views/url_inspector/body_view.dart';
 import 'package:glad_tools/views/url_inspector/headers_view.dart';
 import 'package:glad_tools/views/url_inspector/status_view.dart';
 import 'package:glad_tools/views/main_view.dart';
-import 'package:glad_tools/views/tool_widget_state.dart';
+import 'package:glad_tools/views/tool_widget.dart';
 import 'package:http/http.dart';
 
 class UrlInspectorView extends ToolWidget<UrlInspectorTool> {

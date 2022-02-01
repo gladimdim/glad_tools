@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:glad_tools/components/ui/bordered_all.dart';
 import 'package:glad_tools/tools/base64_image/base64_image_tool.dart';
 import 'package:glad_tools/utils/clipboard_manager.dart';
-import 'package:glad_tools/views/tool_widget_state.dart';
+import 'package:glad_tools/views/tool_widget.dart';
 
 class Base64ImageDecoderView extends ToolWidget<Base64ImageTool> {
   const Base64ImageDecoderView({

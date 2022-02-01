@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:glad_tools/tools/url_parser/query_list.dart';
 import 'package:glad_tools/views/main_view.dart';
-import 'package:glad_tools/views/tool_widget_state.dart';
+import 'package:glad_tools/views/tool_widget.dart';
 
 class UrlParserView extends ToolWidget<UrlParserTool> {
   const UrlParserView({

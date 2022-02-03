@@ -21,7 +21,7 @@ Works on:
 
 # Download
 
-## All binaries for 🍎 macOS and 🪟 Windowsg are available on Release page:
+## All binaries for 🍎 macOS and 🪟 Windows are available on Release page:
 
 [Releases](https://github.com/gladimdim/glad_tools/releases)
 

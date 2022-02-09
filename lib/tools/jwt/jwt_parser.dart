@@ -1,5 +1,6 @@
 
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:glad_tools/tools/model/tool_object.dart';
 import 'package:glad_tools/views/jwt_parser_view.dart';
@@ -8,7 +9,7 @@ class JwtParserTool extends ToolObject {
   JwtParserTool([String? input])
       : super(
           title: "JWT Parser",
-          icon: const Icon(Icons.stars_outlined),
+          icon: Icons.stars_outlined,
           contentBuilder: (context, tool) => JwtParserView(tool: tool as JwtParserTool),
     input: input,
         );

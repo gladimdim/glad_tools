@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 class UrlInspectorTool extends ToolObject {
   UrlInspectorTool([String? input])
       : super(
-    icon: const Icon(Icons.search_sharp),
+    icon: Icons.search_sharp,
     title: "URL Inspector",
     contentBuilder: (context, tool) => UrlInspectorView(tool: tool as UrlInspectorTool),
     input: input,

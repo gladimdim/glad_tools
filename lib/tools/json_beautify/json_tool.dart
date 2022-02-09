@@ -8,7 +8,7 @@ class JsonTool extends ToolObject {
   JsonTool([String? input])
       : super(
           title: "JSON Beautify",
-          icon: const Icon(Icons.format_align_justify),
+          icon: Icons.format_align_justify,
           contentBuilder: (context, tool) => JsonToolView(tool: tool as JsonTool,),
           input: input,
         );

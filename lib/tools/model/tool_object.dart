@@ -4,7 +4,7 @@ typedef WidgetToolBuilder = Widget Function(
     BuildContext context, ToolObject tool);
 
 abstract class ToolObject {
-  final Icon icon;
+  final IconData icon;
   final WidgetToolBuilder contentBuilder;
   final String title;
   String? input;

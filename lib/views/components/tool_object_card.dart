@@ -13,9 +13,12 @@ class ToolObjectCard extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Icon(
-            tool.icon,
-            size: 64,
+          Hero(
+            tag: tool.title,
+            child: Icon(
+              tool.icon,
+              size: 64,
+            ),
           ),
           Text(
             tool.title,

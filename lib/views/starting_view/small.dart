@@ -32,13 +32,21 @@ class SmallStartingScreen extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => Scaffold(
-          appBar: AppBar(
-            title: Text(tool.title),
-          ),
-          body: tool.contentBuilder(
-            context,
-            tool,
+        builder: (context) => Material(
+          child: Scaffold(
+            appBar: AppBar(
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(tool.title),
+                  Hero(tag: tool.title, child: Icon(tool.icon)),
+                ],
+              ),
+            ),
+            body: tool.contentBuilder(
+              context,
+              tool,
+            ),
           ),
         ),
       ),

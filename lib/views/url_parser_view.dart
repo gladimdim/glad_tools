@@ -52,10 +52,7 @@ class _Base64ImageContentState extends ToolWidgetState<UrlParserView, UrlParserT
             TextButton(onPressed: _encodeUrl, child: const Text("Encode")),
           ],
         ),
-        ConstrainedBox(
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height - TOP_BAR_HEIGHT,
-          ),
+        Expanded(
           child: SingleChildScrollView(
             child: Column(
               children: [

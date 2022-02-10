@@ -32,7 +32,7 @@ class JwtParserTool extends ToolObject {
       default:
         throw "Invalid format";
     }
-    return utf8.decode(base64Decode(input));
+    return utf8.decode(base64Decode(payloadString));
   }
 }
 

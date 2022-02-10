@@ -1,7 +1,7 @@
 import 'package:glad_tools/tools/url_parser/url_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:glad_tools/tools/url_parser/query_list.dart';
+import 'package:glad_tools/views/url_parser_view/query_list_view.dart';
 import 'package:glad_tools/views/main_view.dart';
 import 'package:glad_tools/views/tool_widget.dart';
 

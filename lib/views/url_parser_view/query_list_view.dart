@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:glad_tools/views/url_parser_view/add_new_query_param.dart';
 
 class QueryListView extends StatelessWidget {
   final Map<String, String> queryParameters;
@@ -43,9 +44,14 @@ class QueryListView extends StatelessWidget {
     }
     return SingleChildScrollView(
       child: Column(
-        children: widgets,
+        children: [...widgets, AddNewQueryParamView(onAdd: _onNewParamAdd)],
       ),
     );
+  }
+
+  _onNewParamAdd(MapEntry<String, String> entry) {
+    var newMap = Map.fromEntries([...queryParameters.entries, entry]);
+    onQueryUpdate(newMap);
   }
 
   void updateQuery(String? value, MapEntry<String, String> query) {
@@ -63,4 +69,6 @@ class QueryListView extends StatelessWidget {
   void _removeQueryParam(MapEntry<String, String> query) {
     updateQuery(null, query);
   }
+
+
 }

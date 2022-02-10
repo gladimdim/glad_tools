@@ -34,5 +34,19 @@ class JwtParserTool extends ToolObject {
     }
     return utf8.decode(base64Decode(payloadString));
   }
+
+  DateTime? expirationDate(Map json) {
+    final exp = json["exp"];
+    DateTime? expDate;
+    if (exp == null) {
+      expDate = null;
+    } else if (exp is int) {
+      expDate = DateTime.fromMillisecondsSinceEpoch(exp * 1000);
+    } else if (exp is String) {
+      expDate = DateTime.parse(exp);
+    }
+
+    return expDate;
+  }
 }
 

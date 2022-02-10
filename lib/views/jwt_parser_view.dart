@@ -179,17 +179,9 @@ class _Base64ImageContentState
   }
 
   void updateExpirationDate(Map json) {
-    final exp = json["exp"];
-
-    if (exp == null) {
-      _expirationDate = null;
-    } else if (exp is int) {
-      _expirationDate = DateTime.fromMillisecondsSinceEpoch(exp * 1000);
-    } else if (exp is String) {
-      _expirationDate = DateTime.parse(exp);
-    }
-
-    setState(() {});
+    setState(() {
+      _expirationDate = toolObject.expirationDate(json);
+    });
   }
 
   void updateWithError(String error) {

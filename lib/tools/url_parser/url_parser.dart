@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glad_tools/tools/model/tool_object.dart';
-import 'package:glad_tools/views/url_parser_view.dart';
+import 'package:glad_tools/views/url_parser_view/url_parser_view.dart';
 
 class UrlParserTool extends ToolObject {
   UrlParserTool([String? input])

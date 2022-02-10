@@ -17,6 +17,7 @@ class AddNewQueryParamView extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
+                onSubmitted: (_) => _onAdd(),
                 decoration: const InputDecoration(
                     label: Text("Name"),
                     border: OutlineInputBorder(
@@ -36,14 +37,19 @@ class AddNewQueryParamView extends StatelessWidget {
                       borderSide: BorderSide(),
                     )),
                 controller: _tValue,
+                onSubmitted: (_) => _onAdd(),
               ),
             ),
           ),
           IconButton(
-              onPressed: () => onAdd(MapEntry(_tName.text, _tValue.text)),
+              onPressed: _onAdd,
               icon: const Icon(Icons.add)),
         ],
       ),
     );
+  }
+
+  void _onAdd() {
+    onAdd(MapEntry(_tName.text, _tValue.text));
   }
 }

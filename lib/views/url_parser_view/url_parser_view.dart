@@ -15,12 +15,14 @@ class UrlParserView extends ToolWidget<UrlParserTool> {
   _Base64ImageContentState createState() => _Base64ImageContentState();
 }
 
-class _Base64ImageContentState extends ToolWidgetState<UrlParserView, UrlParserTool> {
+class _Base64ImageContentState
+    extends ToolWidgetState<UrlParserView, UrlParserTool> {
   final TextEditingController _controller = TextEditingController();
   final TextEditingController _hostController = TextEditingController();
   final TextEditingController _pathController = TextEditingController();
   final TextEditingController _queryController = TextEditingController();
   final TextEditingController _schemeController = TextEditingController();
+  final TextEditingController _fragmentController = TextEditingController();
   Uri? uri;
 
   @override
@@ -35,6 +37,7 @@ class _Base64ImageContentState extends ToolWidgetState<UrlParserView, UrlParserT
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Row(
           children: [
@@ -77,7 +80,7 @@ class _Base64ImageContentState extends ToolWidgetState<UrlParserView, UrlParserT
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
                           decoration:
-                          const InputDecoration(label: Text("Scheme")),
+                              const InputDecoration(label: Text("Scheme")),
                           controller: _schemeController,
                           onSubmitted: (String? value) {
                             if (uri == null) {
@@ -98,7 +101,7 @@ class _Base64ImageContentState extends ToolWidgetState<UrlParserView, UrlParserT
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
                           decoration:
-                          const InputDecoration(label: Text("Host")),
+                              const InputDecoration(label: Text("Host")),
                           controller: _hostController,
                           onSubmitted: (String? value) {
                             if (uri == null) {
@@ -124,7 +127,7 @@ class _Base64ImageContentState extends ToolWidgetState<UrlParserView, UrlParserT
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
                           decoration:
-                          const InputDecoration(label: Text("Path")),
+                              const InputDecoration(label: Text("Path")),
                           controller: _pathController,
                           onSubmitted: (String? value) {
                             if (uri == null) {
@@ -146,14 +149,14 @@ class _Base64ImageContentState extends ToolWidgetState<UrlParserView, UrlParserT
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
                           decoration:
-                          const InputDecoration(label: Text("Query")),
-                          controller: _queryController,
+                              const InputDecoration(label: Text("Fragment")),
+                          controller: _fragmentController,
                           onSubmitted: (String? value) {
                             if (uri == null) {
                               return;
                             }
                             if (value != null) {
-                              uri = uri!.replace(query: value);
+                              uri = uri!.replace(fragment: value);
                             }
                             _controller.text = uri.toString();
                             _parse();
@@ -163,6 +166,24 @@ class _Base64ImageContentState extends ToolWidgetState<UrlParserView, UrlParserT
                       ),
                     ),
                   ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    decoration: const InputDecoration(label: Text("Query")),
+                    controller: _queryController,
+                    onSubmitted: (String? value) {
+                      if (uri == null) {
+                        return;
+                      }
+                      if (value != null) {
+                        uri = uri!.replace(query: value);
+                      }
+                      _controller.text = uri.toString();
+                      _parse();
+                      // _updateMainInputWithUri(uri!);
+                    },
+                  ),
                 ),
                 if (uri != null && uri!.hasQuery)
                   QueryListView(
@@ -186,6 +207,7 @@ class _Base64ImageContentState extends ToolWidgetState<UrlParserView, UrlParserT
       _hostController.clear();
       _queryController.clear();
       _schemeController.clear();
+      _fragmentController.clear();
     });
   }
 
@@ -206,6 +228,7 @@ class _Base64ImageContentState extends ToolWidgetState<UrlParserView, UrlParserT
       _pathController.text = parsedUri.path;
       _queryController.text = parsedUri.query;
       _schemeController.text = parsedUri.scheme;
+      _fragmentController.text = parsedUri.fragment;
       uri = parsedUri;
     });
   }
@@ -217,6 +240,7 @@ class _Base64ImageContentState extends ToolWidgetState<UrlParserView, UrlParserT
     _hostController.dispose();
     _queryController.dispose();
     _schemeController.dispose();
+    _fragmentController.dispose();
     super.dispose();
   }
 

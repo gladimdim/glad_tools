@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:glad_tools/tools/model/tool_object.dart';
 import 'package:glad_tools/utils/clipboard_manager.dart';
-
+import 'package:share_plus/share_plus.dart';
 class ToolWidget<V extends ToolObject> extends StatefulWidget {
   final V tool;
 
@@ -38,6 +38,13 @@ class ToolWidgetState<T extends ToolWidget, V extends ToolObject> extends State<
     final data = await ClipboardManager.paste();
     if (data != null) {
       toolObject.input = data;
+    }
+  }
+
+  Future share() async {
+    var toShare = toolObject.input;
+    if (toShare != null) {
+      await Share.share(toShare);
     }
   }
 

@@ -49,10 +49,10 @@ class _Base64ImageContentState
               onPressed: _clear,
               child: const Text("Clear"),
             ),
-            IconButton(onPressed: copy, icon: const Icon(Icons.copy)),
-            IconButton(onPressed: _paste, icon: const Icon(Icons.paste)),
             TextButton(onPressed: _decodeUrl, child: const Text("Decode")),
             TextButton(onPressed: _encodeUrl, child: const Text("Encode")),
+            IconButton(onPressed: copy, icon: const Icon(Icons.copy)),
+            IconButton(onPressed: _paste, icon: const Icon(Icons.paste)),
           ],
         ),
         Expanded(

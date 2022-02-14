@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glad_tools/tools/model/tool_object.dart';
+import 'package:glad_tools/views/components/share_button.dart';
 import 'package:glad_tools/views/components/tool_object_card.dart';
 
 class SmallStartingScreen extends StatelessWidget {
@@ -39,7 +40,14 @@ class SmallStartingScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(tool.title),
-                  Hero(tag: tool.title, child: Icon(tool.icon)),
+                  Row(
+                    children: [
+                      Hero(tag: tool.title, child: Icon(tool.icon)),
+                      ShareButton(
+                        tool: tool,
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),

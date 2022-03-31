@@ -157,6 +157,9 @@ class _Base64ImageContentState
 
   void _paste() async {
     await paste();
+    if (toolObject.input != null) {
+      _controller.text = toolObject.input!;
+    }
     _parse();
   }
 

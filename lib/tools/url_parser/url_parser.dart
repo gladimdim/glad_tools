@@ -14,5 +14,10 @@ class UrlParserTool extends ToolObject {
   Uri parseString(String input) {
     return Uri.parse(input);
   }
+
+  @override
+  bool isSupportedOnThisPlatform() {
+    return true;
+  }
 }
 

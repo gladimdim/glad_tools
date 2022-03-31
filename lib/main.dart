@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
     UrlParserTool(),
     JwtParserTool(),
     UrlInspectorTool(),
-  ];
+  ].where((element) => element.isSupportedOnThisPlatform()).toList();
 
   @override
   Widget build(BuildContext context) {

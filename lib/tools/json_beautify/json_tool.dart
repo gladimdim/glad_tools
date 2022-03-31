@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:glad_tools/views/json_beautify_view.dart';
 import 'package:glad_tools/tools/json_beautify/json_parser_isolate.dart';
@@ -12,6 +14,9 @@ class JsonTool extends ToolObject {
           contentBuilder: (context, tool) => JsonToolView(tool: tool as JsonTool,),
           input: input,
         );
+
+  @override
+  bool isSupportedOnThisPlatform() => !kIsWeb;
 
   static Future<String> stringToBeautifyString(String text,
       {int withIndent = 4}) async {

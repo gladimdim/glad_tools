@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -10,9 +9,15 @@ class JwtParserTool extends ToolObject {
       : super(
           title: "JWT Parser",
           icon: Icons.stars_outlined,
-          contentBuilder: (context, tool) => JwtParserView(tool: tool as JwtParserTool),
-    input: input,
+          contentBuilder: (context, tool) =>
+              JwtParserView(tool: tool as JwtParserTool),
+          input: input,
         );
+
+  @override
+  bool isSupportedOnThisPlatform() {
+    return true;
+  }
 
   String decode(String input) {
     final parts = input.split(".");
@@ -49,4 +54,3 @@ class JwtParserTool extends ToolObject {
     return expDate;
   }
 }
-

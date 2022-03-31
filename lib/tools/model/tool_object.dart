@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 typedef WidgetToolBuilder = Widget Function(
@@ -8,6 +10,7 @@ abstract class ToolObject {
   final WidgetToolBuilder contentBuilder;
   final String title;
   String? input;
+  bool isSupportedOnThisPlatform();
 
   ToolObject({
     required this.icon,

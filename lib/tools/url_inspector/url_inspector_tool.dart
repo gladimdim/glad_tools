@@ -15,4 +15,9 @@ class UrlInspectorTool extends ToolObject {
   Future<http.Response> getResponse(String url) async {
     return  await http.get(Uri.parse(url));
   }
+
+  @override
+  bool isSupportedOnThisPlatform() {
+    return true;
+  }
 }

@@ -31,4 +31,9 @@ class Base64ImageTool extends ToolObject {
     }
     return input;
   }
+
+  @override
+  bool isSupportedOnThisPlatform() {
+    return true;
+  }
 }
